@@ -1,0 +1,115 @@
+Feature Coverage Report
+Coverage Summary:
+  manualUI: 52%
+  manualAPI: 0%
+  automateUI: 50%
+  automateAPI: 67%
+
+Feature details:
+- Two Factor Auth
+    manualUI: 40%
+    manualAPI: NA
+    automateUI: NA
+    automateAPI: 100%
+    Summary: 70%
+    Manual Test Cases: TC-M-001, TC-M-002, TC-M-003, TC-M-010, TC-M-011
+    Automate Test Cases: TC-A-101, TC-A-102
+- Notifications
+    manualUI: 60%
+    manualAPI: NA
+    automateUI: 50%
+    automateAPI: NA
+    Summary: 55%
+    Manual Test Cases: TC-M-004, TC-M-005, TC-M-006, TC-M-012, TC-M-013
+    Automate Test Cases: TC-A-103, TC-A-104
+- Billing
+    manualUI: NA
+    manualAPI: NA
+    automateUI: NA
+    automateAPI: 67%
+    Summary: 67%
+    Automate Test Cases: TC-A-105, TC-A-106, TC-A-107
+- Help Center
+    manualUI: 0%
+    manualAPI: NA
+    automateUI: NA
+    automateAPI: NA
+    Summary: 0%
+    Manual Test Cases: TC-M-007, TC-M-008, TC-M-009
+- Login
+    manualUI: 67%
+    manualAPI: NA
+    automateUI: 50%
+    automateAPI: NA
+    Summary: 58%
+- Registration
+    manualUI: 50%
+    manualAPI: NA
+    automateUI: 50%
+    automateAPI: 67%
+    Summary: 56%
+- Password Reset
+    manualUI: 50%
+    manualAPI: NA
+    automateUI: NA
+    automateAPI: 67%
+    Summary: 58%
+- Profile Edit
+    manualUI: 67%
+    manualAPI: NA
+    automateUI: NA
+    automateAPI: NA
+    Summary: 67%
+- Admin Panel
+    manualUI: NA
+    manualAPI: NA
+    automateUI: 50%
+    automateAPI: 50%
+    Summary: 50%
+- Login
+    manualUI: 67%
+    manualAPI: NA
+    automateUI: 50%
+    automateAPI: NA
+    Summary: 58%
+- Registration
+    manualUI: 50%
+    manualAPI: NA
+    automateUI: 50%
+    automateAPI: 67%
+    Summary: 56%
+- Password Reset
+    manualUI: 50%
+    manualAPI: NA
+    automateUI: NA
+    automateAPI: 67%
+    Summary: 58%
+- Profile Edit
+    manualUI: 67%
+    manualAPI: NA
+    automateUI: NA
+    automateAPI: NA
+    Summary: 67%
+- Admin Panel
+    manualUI: NA
+    manualAPI: NA
+    automateUI: 50%
+    automateAPI: 50%
+    Summary: 50%
+
+Acceptance Criteria w statusie TODO (turkusowy):
+TODO: Two Factor Auth - User sees 2FA setup wizard
+TODO: Notifications - User can set notification preferences
+
+Acceptance Criteria w statusie InProgress (pomarańczowy):
+InProgress: Two Factor Auth - User can change 2FA method
+InProgress: Notifications - Notification sound can be customized
+InProgress: Registration - Error for duplicate email
+InProgress: Registration - Error for duplicate email
+
+Całkowite pokrycie: 55%
+Pokrycie dla każdego taga:
+  manualUI: 52%
+  manualAPI: 0%
+  automateUI: 50%
+  automateAPI: 67%

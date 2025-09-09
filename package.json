@@ -1,0 +1,18 @@
+{
+  "name": "feature-coverage-bytest",
+  "version": "1.0.0",
+  "main": "coverage_calc.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/coverage_calc.js",
+    "fecobyte": "npm run build && node dist/coverage_calc.js"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^24.3.1",
+    "typescript": "^5.0.0"
+  }
+}
