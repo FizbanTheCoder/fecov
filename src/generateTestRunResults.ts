@@ -52,12 +52,25 @@ function generateTestRunResultsYaml(featureMap: FeatureMap): string {
 }
 
 function main() {
-  const featureMapPath = path.resolve('featureMap.yml');
-  const featureMap = loadFeatureMap(featureMapPath);
-  const yamlResults = generateTestRunResultsYaml(featureMap);
-  const yamlPath = path.resolve('testPlan', 'testRunResults.yml');
-  fs.writeFileSync(yamlPath, yamlResults);
-  console.log('Test run results YAML generated:', yamlPath);
+  const workspaceDir = process.cwd();
+  const testPlanDir = path.resolve('testPlan');
+  if (!fs.existsSync(testPlanDir)) {
+    fs.mkdirSync(testPlanDir, { recursive: true });
+  }
+  const fecovFiles = fs.readdirSync(workspaceDir).filter(f => f.endsWith('.fecov.yml'));
+  if (fecovFiles.length === 0) {
+    console.error('Brak plików *.fecov.yml w katalogu projektu!');
+    return;
+  }
+  for (const file of fecovFiles) {
+    const featureMapPath = path.join(workspaceDir, file);
+    const baseName = path.basename(file, '.fecov.yml');
+    const featureMap = loadFeatureMap(featureMapPath);
+    const yamlResults = generateTestRunResultsYaml(featureMap);
+    const yamlPath = path.join(testPlanDir, `${baseName}_testRunResults.yml`);
+    fs.writeFileSync(yamlPath, yamlResults);
+    console.log('Test run results YAML generated:', yamlPath);
+  }
 }
 
 main();

@@ -80,13 +80,22 @@ function generateTestReportHtml(results: TestRunResults): string {
 }
 
 function main() {
-  const testRunPath = path.resolve('testPlan', 'testRunResults.yml');
-  const results = loadTestRunResults(testRunPath);
-  const markdown = generateTestReportMarkdown(results);
-  const html = generateTestReportHtml(results);
-  fs.writeFileSync(path.resolve('testPlan', 'testRunReport.md'), markdown);
-  fs.writeFileSync(path.resolve('testPlan', 'testRunReport.html'), html);
-  console.log('Test run report generated: testRunReport.md, testRunReport.html');
+  const testPlanDir = path.resolve('testPlan');
+  const files = fs.readdirSync(testPlanDir).filter(f => f.endsWith('_testRunResults.yml'));
+  if (files.length === 0) {
+    console.error('Brak plików *_testRunResults.yml w katalogu testPlan!');
+    return;
+  }
+  for (const file of files) {
+    const testRunPath = path.join(testPlanDir, file);
+    const baseName = file.replace('_testRunResults.yml', '');
+    const results = loadTestRunResults(testRunPath);
+    const markdown = generateTestReportMarkdown(results);
+    const html = generateTestReportHtml(results);
+    fs.writeFileSync(path.join(testPlanDir, `${baseName}_testRunReport.md`), markdown);
+    fs.writeFileSync(path.join(testPlanDir, `${baseName}_testRunReport.html`), html);
+    console.log(`Test run report generated: ${baseName}_testRunReport.md, ${baseName}_testRunReport.html`);
+  }
 }
 
 main();

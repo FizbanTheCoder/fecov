@@ -347,31 +347,41 @@ async function main() {
     .help()
     .parse();
 
-  const featureMapPath = path.resolve(argv.featureMap);
   const outputDir = path.resolve(argv.output);
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
-  const featureMap = loadFeatureMap(featureMapPath);
-  const result = calculateCoverage(featureMap.features);
-  (global as any).featureMap = featureMap;
-  const html = generateHtmlReport(result);
-  const now = new Date();
-  const dateStr = now.toISOString().replace(/[:.]/g, '-').slice(0,19);
-  const htmlPath = path.join(outputDir, `coverage_report_${dateStr}.html`);
-  const txtPath = path.join(outputDir, `coverage_report_${dateStr}.txt`);
-  fs.writeFileSync(htmlPath, html);
-  saveCoverageToTxt(result, txtPath);
-  if (argv.rbt) {
-    // tylko tabela RBT
-    console.log('\nRBT - Severity & Risk dla funkcji:');
-    console.log('Feature | Severity | Risk');
-    result.features.forEach((f: any) => {
-      console.log(`${f.name} | ${f.severity ?? '-'} | ${f.risk ?? '-'}`);
-    });
-  } else {
-    printCoverageToTerminal(result);
-    console.log(`Coverage report generated: ${htmlPath} & ${txtPath}`);
+  // Find all *.fecov.yml files in workspace root
+  const workspaceDir = process.cwd();
+  const fecovFiles = fs.readdirSync(workspaceDir).filter(f => f.endsWith('.fecov.yml'));
+  if (fecovFiles.length === 0) {
+    console.error('Brak plików *.fecov.yml w katalogu projektu!');
+    return;
+  }
+  for (const file of fecovFiles) {
+    const featureMapPath = path.join(workspaceDir, file);
+    const baseName = path.basename(file, '.fecov.yml');
+    const featureMap = loadFeatureMap(featureMapPath);
+    const result = calculateCoverage(featureMap.features);
+    (global as any).featureMap = featureMap;
+    const html = generateHtmlReport(result);
+    const now = new Date();
+    const dateStr = now.toISOString().replace(/[:.]/g, '-').slice(0,19);
+    const htmlPath = path.join(outputDir, `${baseName}_coverage_report_${dateStr}.html`);
+    const txtPath = path.join(outputDir, `${baseName}_coverage_report_${dateStr}.txt`);
+    fs.writeFileSync(htmlPath, html);
+    saveCoverageToTxt(result, txtPath);
+    if (argv.rbt) {
+      // tylko tabela RBT
+      console.log(`\nRBT - Severity & Risk dla funkcji (${baseName}):`);
+      console.log('Feature | Severity | Risk');
+      result.features.forEach((f: any) => {
+        console.log(`${f.name} | ${f.severity ?? '-'} | ${f.risk ?? '-'}`);
+      });
+    } else {
+      printCoverageToTerminal(result);
+      console.log(`Coverage report generated: ${htmlPath} & ${txtPath}`);
+    }
   }
   }
   main();

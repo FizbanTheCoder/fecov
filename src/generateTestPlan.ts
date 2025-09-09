@@ -84,17 +84,31 @@ function generateHtmlChecklist(featureMap: FeatureMap): string {
 }
 
 function main() {
-  const featureMapPath = path.resolve('featureMap.yml');
-  const featureMap = loadFeatureMap(featureMapPath);
-  const markdown = generateMarkdownChecklist(featureMap);
-  const html = generateHtmlChecklist(featureMap);
-  const now = new Date();
-  const dateStr = now.toISOString().replace(/[:.]/g, '-').slice(0,19);
-  const mdPath = path.resolve('testPlan', `testPlan_${dateStr}.md`);
-  const htmlPath = path.resolve('testPlan', `testPlan_${dateStr}.html`);
-  fs.writeFileSync(mdPath, markdown);
-  fs.writeFileSync(htmlPath, html);
-  console.log('Test plan checklist generated:', mdPath, htmlPath);
+  const workspaceDir = process.cwd();
+  const testPlanDir = path.resolve('testPlan');
+  if (!fs.existsSync(testPlanDir)) {
+    fs.mkdirSync(testPlanDir, { recursive: true });
+  }
+  // Only process *.fecov.yml files
+  const fecovFiles = fs.readdirSync(workspaceDir).filter(f => f.endsWith('.fecov.yml'));
+  if (fecovFiles.length === 0) {
+    console.error('Brak plików *.fecov.yml w katalogu projektu!');
+    return;
+  }
+  for (const file of fecovFiles) {
+    const featureMapPath = path.join(workspaceDir, file);
+    const baseName = path.basename(file, '.fecov.yml');
+    const featureMap = loadFeatureMap(featureMapPath);
+    const markdown = generateMarkdownChecklist(featureMap);
+    const html = generateHtmlChecklist(featureMap);
+    const now = new Date();
+    const dateStr = now.toISOString().replace(/[:.]/g, '-').slice(0,19);
+    const mdPath = path.join(testPlanDir, `${baseName}_testPlan_${dateStr}.md`);
+    const htmlPath = path.join(testPlanDir, `${baseName}_testPlan_${dateStr}.html`);
+    fs.writeFileSync(mdPath, markdown);
+    fs.writeFileSync(htmlPath, html);
+    console.log('Test plan checklist generated:', mdPath, htmlPath);
+  }
 }
 
 main();

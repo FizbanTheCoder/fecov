@@ -5,10 +5,10 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/coverage_calc.js",
-    "fecov": "npm run build && node dist/coverage_calc.js",
-    "generateTestPlan": "npm run build && node dist/src/generateTestPlan.js",
-    "generateTestRunResults": "npm run build && node dist/src/generateTestRunResults.js",
-    "generateTestReport": "npm run build && node dist/src/generateTestReport.js"
+    "fecov_coverage": "npm run build && node dist/coverage_calc.js",
+  "fecov_generateTestPlan": "npm run build && node dist/generateTestPlan.js",
+    "fecov_generateTestRunResults": "npm run build && node dist/generateTestRunResults.js",
+    "fecov_generateTestReport": "npm run build && node dist/generateTestReport.js"
   },
   "dependencies": {
     "js-yaml": "^4.1.0",
