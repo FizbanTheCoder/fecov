@@ -1,5 +1,4 @@
-# FEatureCOvearageBYTEst
-
+# fecov - feature coverage
 ## Opis
 Projekt służy do generowania raportów pokrycia funkcjonalnego oraz checklist testowych na podstawie pliku `featureMap.yml`. Pozwala także na generowanie raportów z przebiegu testów.
 
