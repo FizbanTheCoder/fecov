@@ -1,6 +1,8 @@
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 import * as path from 'path';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 
 interface AcceptanceCriteria {
   description: string;
@@ -322,21 +324,45 @@ function saveCoverageToTxt(result: any, filePath: string) {
   fs.writeFileSync(filePath, txt);
 }
 
-function main() {
-  const featureMapPath = path.resolve('featureMap.yml');
+// ...existing code...
+async function main() {
+  const argv = await yargs(hideBin(process.argv))
+    .option('featureMap', {
+      alias: 'f',
+      type: 'string',
+      description: 'Ścieżka do pliku featureMap.yml',
+      default: 'featureMap.yml'
+    })
+    .option('output', {
+      alias: 'o',
+      type: 'string',
+      description: 'Folder na raporty',
+      default: 'reports'
+    })
+    .option('rbt', {
+      type: 'boolean',
+      description: 'Tylko tabela RBT',
+      default: false
+    })
+    .help()
+    .parse();
+
+  const featureMapPath = path.resolve(argv.featureMap);
+  const outputDir = path.resolve(argv.output);
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
   const featureMap = loadFeatureMap(featureMapPath);
   const result = calculateCoverage(featureMap.features);
   (global as any).featureMap = featureMap;
   const html = generateHtmlReport(result);
   const now = new Date();
   const dateStr = now.toISOString().replace(/[:.]/g, '-').slice(0,19);
-  const htmlPath = path.resolve('reports', `coverage_report_${dateStr}.html`);
-  const txtPath = path.resolve('reports', `coverage_report_${dateStr}.txt`);
+  const htmlPath = path.join(outputDir, `coverage_report_${dateStr}.html`);
+  const txtPath = path.join(outputDir, `coverage_report_${dateStr}.txt`);
   fs.writeFileSync(htmlPath, html);
   saveCoverageToTxt(result, txtPath);
-  // obsługa flagi -rbt
-  const args = process.argv.slice(2);
-  if (args.includes('-rbt')) {
+  if (argv.rbt) {
     // tylko tabela RBT
     console.log('\nRBT - Severity & Risk dla funkcji:');
     console.log('Feature | Severity | Risk');
@@ -345,8 +371,9 @@ function main() {
     });
   } else {
     printCoverageToTerminal(result);
-    console.log('Coverage report generated: coverage_report.html & coverage_report.txt');
+    console.log(`Coverage report generated: ${htmlPath} & ${txtPath}`);
   }
-}
+  }
+  main();
 
-main();
+// ...existing code...
