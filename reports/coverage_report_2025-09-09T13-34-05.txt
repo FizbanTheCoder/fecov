@@ -1,0 +1,202 @@
+Feature Coverage Report
+Coverage Summary:
+  manualUI: 52%
+  manualAPI: 0%
+  automateUI: 50%
+  automateAPI: 67%
+
+RBT - Severity & Risk dla funkcji:
+Feature | Severity | Risk
+Two Factor Auth | 5 | 3.72
+Notifications | 4 | 3.17
+Billing | - | -
+Help Center | - | -
+Login | - | -
+Registration | - | -
+Password Reset | - | -
+Profile Edit | - | -
+Admin Panel | - | -
+Login | - | -
+Registration | - | -
+Password Reset | - | -
+Profile Edit | - | -
+Admin Panel | - | -
+
+Feature details:
+- Two Factor Auth (S:5, R:3.72)
+  Acceptance Criteria:
+    User can enable 2FA (S:4, C:3, R:4)
+    User receives 2FA code (S:3, C:2, R:3.33)
+    API returns error for invalid code (S:2, C:1, R:2.67)
+    User can disable 2FA (S:2, C:2, R:3)
+    User sees 2FA setup wizard (S:5, C:5, R:5)
+    User can change 2FA method (S:4, C:4, R:4.33)
+    manualUI: 40%
+    manualAPI: NA
+    automateUI: NA
+    automateAPI: 100%
+    Summary: 70%
+    Manual Test Cases: TC-M-001, TC-M-002, TC-M-003, TC-M-010, TC-M-011
+    Automate Test Cases: TC-A-101, TC-A-102
+- Notifications (S:4, R:3.17)
+  Acceptance Criteria:
+    User sees notification bell (S:2, C:1, R:2.33)
+    Notification list updates in real time (S:3, C:3, R:3.33)
+    User can mark notification as read (S:2, C:2, R:2.67)
+    Notification disappears after reading (S:1, C:1, R:2)
+    User can set notification preferences (S:5, C:5, R:4.67)
+    Notification sound can be customized (S:4, C:4, R:4)
+    manualUI: 60%
+    manualAPI: NA
+    automateUI: 50%
+    automateAPI: NA
+    Summary: 55%
+    Manual Test Cases: TC-M-004, TC-M-005, TC-M-006, TC-M-012, TC-M-013
+    Automate Test Cases: TC-A-103, TC-A-104
+- Billing (S:-, R:-)
+  Acceptance Criteria:
+    API returns invoice list (S:-, C:-, R:-)
+    API returns error for invalid invoice (S:-, C:-, R:-)
+    API allows invoice download (S:-, C:-, R:-)
+    manualUI: NA
+    manualAPI: NA
+    automateUI: NA
+    automateAPI: 67%
+    Summary: 67%
+    Automate Test Cases: TC-A-105, TC-A-106, TC-A-107
+- Help Center (S:-, R:-)
+  Acceptance Criteria:
+    User can search help articles (S:-, C:-, R:-)
+    User can contact support (S:-, C:-, R:-)
+    Help article opens in new tab (S:-, C:-, R:-)
+    manualUI: 0%
+    manualAPI: NA
+    automateUI: NA
+    automateAPI: NA
+    Summary: 0%
+    Manual Test Cases: TC-M-007, TC-M-008, TC-M-009
+- Login (S:-, R:-)
+  Acceptance Criteria:
+    User can log in with valid credentials (S:-, C:-, R:-)
+    Error message for invalid credentials (S:-, C:-, R:-)
+    Login button disabled for empty fields (S:-, C:-, R:-)
+    manualUI: 67%
+    manualAPI: NA
+    automateUI: 50%
+    automateAPI: NA
+    Summary: 58%
+- Registration (S:-, R:-)
+  Acceptance Criteria:
+    User can register with valid data (S:-, C:-, R:-)
+    Error for duplicate email (S:-, C:-, R:-)
+    Email confirmation sent (S:-, C:-, R:-)
+    Password strength indicator (S:-, C:-, R:-)
+    API returns 201 for valid registration (S:-, C:-, R:-)
+    manualUI: 50%
+    manualAPI: NA
+    automateUI: 50%
+    automateAPI: 67%
+    Summary: 56%
+- Password Reset (S:-, R:-)
+  Acceptance Criteria:
+    User can request password reset (S:-, C:-, R:-)
+    User receives reset email (S:-, C:-, R:-)
+    User can set new password (S:-, C:-, R:-)
+    API returns error for invalid token (S:-, C:-, R:-)
+    manualUI: 50%
+    manualAPI: NA
+    automateUI: NA
+    automateAPI: 67%
+    Summary: 58%
+- Profile Edit (S:-, R:-)
+  Acceptance Criteria:
+    User can change avatar (S:-, C:-, R:-)
+    User can update email (S:-, C:-, R:-)
+    Email field validation (S:-, C:-, R:-)
+    manualUI: 67%
+    manualAPI: NA
+    automateUI: NA
+    automateAPI: NA
+    Summary: 67%
+- Admin Panel (S:-, R:-)
+  Acceptance Criteria:
+    Admin can view user list (S:-, C:-, R:-)
+    API returns user data (S:-, C:-, R:-)
+    Admin can delete user (S:-, C:-, R:-)
+    API returns error for invalid user (S:-, C:-, R:-)
+    manualUI: NA
+    manualAPI: NA
+    automateUI: 50%
+    automateAPI: 50%
+    Summary: 50%
+- Login (S:-, R:-)
+  Acceptance Criteria:
+    User can log in with valid credentials (S:-, C:-, R:-)
+    Error message for invalid credentials (S:-, C:-, R:-)
+    Login button disabled for empty fields (S:-, C:-, R:-)
+    manualUI: 67%
+    manualAPI: NA
+    automateUI: 50%
+    automateAPI: NA
+    Summary: 58%
+- Registration (S:-, R:-)
+  Acceptance Criteria:
+    User can register with valid data (S:-, C:-, R:-)
+    Error for duplicate email (S:-, C:-, R:-)
+    Email confirmation sent (S:-, C:-, R:-)
+    Password strength indicator (S:-, C:-, R:-)
+    API returns 201 for valid registration (S:-, C:-, R:-)
+    manualUI: 50%
+    manualAPI: NA
+    automateUI: 50%
+    automateAPI: 67%
+    Summary: 56%
+- Password Reset (S:-, R:-)
+  Acceptance Criteria:
+    User can request password reset (S:-, C:-, R:-)
+    User receives reset email (S:-, C:-, R:-)
+    User can set new password (S:-, C:-, R:-)
+    API returns error for invalid token (S:-, C:-, R:-)
+    manualUI: 50%
+    manualAPI: NA
+    automateUI: NA
+    automateAPI: 67%
+    Summary: 58%
+- Profile Edit (S:-, R:-)
+  Acceptance Criteria:
+    User can change avatar (S:-, C:-, R:-)
+    User can update email (S:-, C:-, R:-)
+    Email field validation (S:-, C:-, R:-)
+    manualUI: 67%
+    manualAPI: NA
+    automateUI: NA
+    automateAPI: NA
+    Summary: 67%
+- Admin Panel (S:-, R:-)
+  Acceptance Criteria:
+    Admin can view user list (S:-, C:-, R:-)
+    API returns user data (S:-, C:-, R:-)
+    Admin can delete user (S:-, C:-, R:-)
+    API returns error for invalid user (S:-, C:-, R:-)
+    manualUI: NA
+    manualAPI: NA
+    automateUI: 50%
+    automateAPI: 50%
+    Summary: 50%
+
+Acceptance Criteria w statusie TODO (turkusowy):
+TODO: Two Factor Auth - User sees 2FA setup wizard
+TODO: Notifications - User can set notification preferences
+
+Acceptance Criteria w statusie InProgress (pomarańczowy):
+InProgress: Two Factor Auth - User can change 2FA method
+InProgress: Notifications - Notification sound can be customized
+InProgress: Registration - Error for duplicate email
+InProgress: Registration - Error for duplicate email
+
+Całkowite pokrycie: 55%
+Pokrycie dla każdego taga:
+  manualUI: 52%
+  manualAPI: 0%
+  automateUI: 50%
+  automateAPI: 67%

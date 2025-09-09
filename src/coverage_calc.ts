@@ -9,6 +9,7 @@ interface AcceptanceCriteria {
   severity?: number;
   complexity?: number;
   risk?: number;
+  for_test?: boolean;
   test_cases?: {
     manual?: string[];
     automate?: string[];
@@ -20,6 +21,7 @@ interface Feature {
   tags: string[];
   severity?: number;
   risk?: number;
+  for_test?: boolean;
   acceptance_criteria: AcceptanceCriteria[];
 }
 
@@ -326,8 +328,12 @@ function main() {
   const result = calculateCoverage(featureMap.features);
   (global as any).featureMap = featureMap;
   const html = generateHtmlReport(result);
-  fs.writeFileSync(path.resolve('coverage_report.html'), html);
-  saveCoverageToTxt(result, path.resolve('coverage_report.txt'));
+  const now = new Date();
+  const dateStr = now.toISOString().replace(/[:.]/g, '-').slice(0,19);
+  const htmlPath = path.resolve('reports', `coverage_report_${dateStr}.html`);
+  const txtPath = path.resolve('reports', `coverage_report_${dateStr}.txt`);
+  fs.writeFileSync(htmlPath, html);
+  saveCoverageToTxt(result, txtPath);
   // obsługa flagi -rbt
   const args = process.argv.slice(2);
   if (args.includes('-rbt')) {

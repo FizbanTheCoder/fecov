@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "main": "coverage_calc.ts",
   "scripts": {
-    "build": "tsc",
+  "build": "tsc",
     "start": "node dist/coverage_calc.js",
-    "fecov": "npm run build && node dist/coverage_calc.js"
+    "fecov": "npm run build && node dist/coverage_calc.js",
+  "generateTestPlan": "npm run build && node dist/src/generateTestPlan.js",
+  "generateTestRunResults": "npm run build && node dist/src/generateTestRunResults.js",
+  "generateTestReport": "npm run build && node dist/src/generateTestReport.js"
   },
   "dependencies": {
     "js-yaml": "^4.1.0"

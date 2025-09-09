@@ -2,12 +2,14 @@ features:
   - name: Two Factor Auth
     severity: 5
     tags: [manualUI, automateAPI]
+    for_test: true
     acceptance_criteria:
       - description: User can enable 2FA
         tags: [manualUI, automateAPI]
         status: true
         severity: 4
         complexity: 3
+        for_test: true
         test_cases:
           manual: [TC-M-001]
           automate: [TC-A-101]
@@ -16,6 +18,7 @@ features:
         status: false
         severity: 3
         complexity: 2
+        for_test: false
         test_cases:
           manual: [TC-M-002]
       - description: API returns error for invalid code
@@ -23,6 +26,7 @@ features:
         status: true
         severity: 2
         complexity: 1
+        for_test: true
         test_cases:
           automate: [TC-A-102]
       - description: User can disable 2FA
@@ -30,6 +34,7 @@ features:
         status: true
         severity: 2
         complexity: 2
+        for_test: true
         test_cases:
           manual: [TC-M-003]
       - description: User sees 2FA setup wizard
@@ -37,6 +42,7 @@ features:
         status: TODO
         severity: 5
         complexity: 5
+        for_test: false
         test_cases:
           manual: [TC-M-010]
       - description: User can change 2FA method
@@ -44,6 +50,7 @@ features:
         status: inProgress
         severity: 4
         complexity: 4
+        for_test: true
         test_cases:
           manual: [TC-M-011]
   - name: Notifications
@@ -202,13 +209,16 @@ features:
         tags: [automateAPI]
         status: false
   - name: Login
+    for_test: true
     tags: [automateUI, manualUI]
     acceptance_criteria:
       - description: User can log in with valid credentials
         tags: [automateUI, manualUI]
+        for_test: true
         status: true
       - description: Error message for invalid credentials
         tags: [automateUI, manualUI]
+        for_test: true
         status: false
       - description: Login button disabled for empty fields
         tags: [manualUI]
