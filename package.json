@@ -1,11 +1,11 @@
 {
-  "name": "feature-coverage-bytest",
+  "name": "fecov",
   "version": "1.0.0",
   "main": "coverage_calc.ts",
   "scripts": {
     "build": "tsc",
     "start": "node dist/coverage_calc.js",
-    "fecobyte": "npm run build && node dist/coverage_calc.js"
+    "fecov": "npm run build && node dist/coverage_calc.js"
   },
   "dependencies": {
     "js-yaml": "^4.1.0"
