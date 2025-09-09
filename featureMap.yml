@@ -1,70 +1,96 @@
 features:
   - name: Two Factor Auth
+    severity: 5
     tags: [manualUI, automateAPI]
     acceptance_criteria:
       - description: User can enable 2FA
         tags: [manualUI, automateAPI]
         status: true
+        severity: 4
+        complexity: 3
         test_cases:
           manual: [TC-M-001]
           automate: [TC-A-101]
       - description: User receives 2FA code
         tags: [manualUI]
         status: false
+        severity: 3
+        complexity: 2
         test_cases:
           manual: [TC-M-002]
       - description: API returns error for invalid code
         tags: [automateAPI]
         status: true
+        severity: 2
+        complexity: 1
         test_cases:
           automate: [TC-A-102]
       - description: User can disable 2FA
         tags: [manualUI]
         status: true
+        severity: 2
+        complexity: 2
         test_cases:
           manual: [TC-M-003]
       - description: User sees 2FA setup wizard
         tags: [manualUI]
         status: TODO
+        severity: 5
+        complexity: 5
         test_cases:
           manual: [TC-M-010]
       - description: User can change 2FA method
         tags: [manualUI]
         status: inProgress
+        severity: 4
+        complexity: 4
         test_cases:
           manual: [TC-M-011]
   - name: Notifications
+    severity: 4
     tags: [manualUI, automateUI]
     acceptance_criteria:
       - description: User sees notification bell
         tags: [manualUI]
         status: true
+        severity: 2
+        complexity: 1
         test_cases:
           manual: [TC-M-004]
       - description: Notification list updates in real time
         tags: [automateUI]
         status: false
+        severity: 3
+        complexity: 3
         test_cases:
           automate: [TC-A-103]
       - description: User can mark notification as read
         tags: [manualUI, automateUI]
         status: true
+        severity: 2
+        complexity: 2
         test_cases:
           manual: [TC-M-005]
           automate: [TC-A-104]
       - description: Notification disappears after reading
         tags: [manualUI]
         status: true
+        severity: 1
+        complexity: 1
         test_cases:
           manual: [TC-M-006]
       - description: User can set notification preferences
         tags: [manualUI]
         status: TODO
+        severity: 5
+        complexity: 5
         test_cases:
           manual: [TC-M-012]
       - description: Notification sound can be customized
         tags: [manualUI]
         status: inProgress
+        severity: 4
+        complexity: 4
         test_cases:
           manual: [TC-M-013]
   - name: Billing

@@ -6,6 +6,9 @@ interface AcceptanceCriteria {
   description: string;
   tags: string[];
   status: 'true' | 'false' | 'inProgress' | 'TODO' | boolean;
+  severity?: number;
+  complexity?: number;
+  risk?: number;
   test_cases?: {
     manual?: string[];
     automate?: string[];
@@ -15,6 +18,8 @@ interface AcceptanceCriteria {
 interface Feature {
   name: string;
   tags: string[];
+  severity?: number;
+  risk?: number;
   acceptance_criteria: AcceptanceCriteria[];
 }
 
@@ -39,13 +44,16 @@ function calculateCoverage(features: Feature[]) {
     automateAPI: { total: 0, covered: 0 }
   };
 
-  features.forEach(feature => {
+  // sortujemy features po severity malejąco
+  const sortedFeatures = [...features].sort((a, b) => (b.severity || 0) - (a.severity || 0));
+  sortedFeatures.forEach(feature => {
     const tagCoverage: Record<TagType, { total: number, covered: number }> = {
       manualUI: { total: 0, covered: 0 },
       manualAPI: { total: 0, covered: 0 },
       automateUI: { total: 0, covered: 0 },
       automateAPI: { total: 0, covered: 0 }
     };
+    // kalkulacja risk dla acceptance criteria
     feature.acceptance_criteria.forEach(ac => {
       tagTypes.forEach(tag => {
         if (ac.tags.includes(tag)) {
@@ -55,13 +63,18 @@ function calculateCoverage(features: Feature[]) {
             tagCoverage[tag].covered++;
             tagTotals[tag].covered++;
           }
-          // TODO oraz InProgress traktujemy jak false (nie pokryte)
-          // więc nie zwiększamy covered, tylko total
-          // (już total++ jest wyżej)
-          // Jeśli status to 'false', 'TODO', 'InProgress', nie robimy nic
         }
       });
+      // risk = (feature.severity + ac.severity + ac.complexity)/3
+      if (typeof feature.severity === 'number' && typeof ac.severity === 'number' && typeof ac.complexity === 'number') {
+        ac.risk = Math.round((feature.severity + ac.severity + ac.complexity) / 3 * 100) / 100;
+      } else {
+        ac.risk = undefined;
+      }
     });
+    // risk dla feature: średnia z risk acceptance criteria
+    let risks = feature.acceptance_criteria.map(ac => typeof ac.risk === 'number' ? ac.risk : null).filter((v): v is number => v !== null);
+  feature.risk = risks.length ? Math.round(risks.reduce((a,b)=>a+b,0)/risks.length * 100) / 100 : undefined;
     // Oblicz łączne pokrycie dla feature (tylko dla obecnych tagów)
     const presentTags = tagTypes.filter(tag => feature.tags.includes(tag));
     const presentCoverages = presentTags.map(tag => tagCoverage[tag].total ? (tagCoverage[tag].covered/tagCoverage[tag].total) : 0);
@@ -74,7 +87,10 @@ function calculateCoverage(features: Feature[]) {
           ? (tagCoverage[tag].total ? Math.round((tagCoverage[tag].covered/tagCoverage[tag].total)*100) : 0)
           : 'NA'
       ])),
-      summaryCoverage
+      summaryCoverage,
+      severity: feature.severity,
+      risk: feature.risk,
+      acceptance_criteria: feature.acceptance_criteria
     });
   });
 
@@ -88,6 +104,26 @@ function calculateCoverage(features: Feature[]) {
 
 function generateHtmlReport(result: any) {
   let html = `<html><head><title>Feature Coverage Report</title></head><body>`;
+  // Sekcja TODO/inProgress nad tabelami
+  const featureMap = (global as any).featureMap || null;
+  if (featureMap) {
+    let todoList = '';
+    let inProgressList = '';
+    featureMap.features.forEach((feature: any) => {
+      feature.acceptance_criteria.forEach((ac: any) => {
+        if (ac.status === 'TODO') {
+          todoList += `<li><b>TODO:</b> ${feature.name} - ${ac.description}</li>`;
+        }
+        if (ac.status === 'inProgress' || ac.status === 'InProgress') {
+          inProgressList += `<li><b>InProgress:</b> ${feature.name} - ${ac.description}</li>`;
+        }
+      });
+    });
+    if (todoList) html += `<h3>Acceptance Criteria w statusie TODO:</h3><ul style="background: #e6fcfa; color: #00bfc9;">${todoList}</ul>`;
+    if (inProgressList) html += `<h3>Acceptance Criteria w statusie InProgress:</h3><ul style="background: #fff3e0; color: #ff9800;">${inProgressList}</ul>`;
+  }
+
+  // Tabela Pokrycie
   html += `<h1>Feature Coverage Report</h1>`;
   html += `<h2>Coverage Summary</h2>`;
   html += `<ul>`;
@@ -95,28 +131,10 @@ function generateHtmlReport(result: any) {
     html += `<li>${tag}: ${percent}%</li>`;
   });
   html += `</ul>`;
-  html += `<table border="1"><tr><th>Feature</th><th>manualUI</th><th>manualAPI</th><th>automateUI</th><th>automateAPI</th><th>Summary</th></tr>`;
-  const featureMap = (global as any).featureMap || null;
-  // Sekcja TODO i inProgress
-  if (featureMap) {
-    let todoRows = '';
-    let inProgressRows = '';
-    featureMap.features.forEach((feature: any) => {
-      feature.acceptance_criteria.forEach((ac: any) => {
-        if (ac.status === 'TODO') {
-          todoRows += `<tr><td colspan="6" style="color: #00bfc9; background: #e6fcfa; font-weight: bold;">TODO: ${feature.name} - ${ac.description}</td></tr>`;
-        }
-        if (ac.status === 'inProgress' || ac.status === 'InProgress') {
-          inProgressRows += `<tr><td colspan="6" style="color: #ff9800; background: #fff3e0; font-weight: bold;">InProgress: ${feature.name} - ${ac.description}</td></tr>`;
-        }
-      });
-    });
-    if (todoRows) html += `<tr><td colspan="6" style="background: #e6fcfa;"><b>Acceptance Criteria w statusie TODO:</b></td></tr>` + todoRows;
-    if (inProgressRows) html += `<tr><td colspan="6" style="background: #fff3e0;"><b>Acceptance Criteria w statusie InProgress:</b></td></tr>` + inProgressRows;
-  }
-  // featureMap must be passed to result for this to work
+  html += `<h2>Pokrycie szczegółowe</h2>`;
+  html += `<table border="1"><tr><th>Feature (Severity)</th><th>manualUI</th><th>manualAPI</th><th>automateUI</th><th>automateAPI</th><th>Summary</th></tr>`;
   result.features.forEach((f: any, idx: number) => {
-    html += `<tr><td>${f.name}</td>`;
+    html += `<tr><td>${f.name} <span style='color:#d32f2f'>(S:${f.severity ?? '-'}, R:${f.risk ?? '-'})</span></td>`;
     ['manualUI','manualAPI','automateUI','automateAPI'].forEach(tag => {
       html += `<td>${f.coverage[tag] === 'NA' ? 'NA' : f.coverage[tag] + '%'}</td>`;
     });
@@ -136,10 +154,38 @@ function generateHtmlReport(result: any) {
       if (automateCases.length) html += `<tr><td colspan="6" style="color: #a020f0;">Automate: ${automateCases.join(', ')}</td></tr>`;
     }
   });
-  html += `</table></body></html>`;
+  html += `</table>`;
+
+  // Szczegółowe RBT dla acceptance criteria
+  if (featureMap) {
+    html += `<h2>Szczegółowe RBT dla Acceptance Criteria</h2>`;
+    featureMap.features.forEach((feature: any, idx: number) => {
+      html += `<h3>${feature.name}</h3>`;
+      html += `<ul style='background:#f5f5f5;'>`;
+      feature.acceptance_criteria.forEach((ac: any) => {
+        html += `<li>${ac.description} <span style='color:#1976d2'>(S:${ac.severity ?? '-'}, C:${ac.complexity ?? '-'}, R:${ac.risk ?? '-'})</span></li>`;
+      });
+      html += `</ul>`;
+    });
+  }
+
+  // Tabela RBT
+  html += `<h2>RBT - Severity & Risk dla funkcji</h2>`;
+  html += `<table border="1"><tr><th>Feature</th><th>Severity</th><th>Risk</th></tr>`;
+  result.features.forEach((f: any) => {
+    html += `<tr><td>${f.name}</td><td>${f.severity ?? '-'}</td><td>${f.risk ?? '-'}</td></tr>`;
+  });
+  html += `</table>`;
+  html += `</body></html>`;
   return html;
 }
 function printCoverageToTerminal(result: any) {
+  // Tabela RBT dla funkcji
+  console.log('\nRBT - Severity & Risk dla funkcji:');
+  console.log('Feature | Severity | Risk');
+  result.features.forEach((f: any) => {
+    console.log(`${f.name} | ${f.severity ?? '-'} | ${f.risk ?? '-'}`);
+  });
   console.log('Feature Coverage Report');
   console.log('Coverage Summary:');
   Object.entries(result.totalCoverage).forEach(([tag, percent]) => {
@@ -148,7 +194,14 @@ function printCoverageToTerminal(result: any) {
   console.log('\nFeature details:');
   const featureMap = (global as any).featureMap || null;
   result.features.forEach((f: any, idx: number) => {
-    console.log(`- ${f.name}`);
+  console.log(`- ${f.name} (S:${f.severity ?? '-'}, R:${f.risk ?? '-'})`);
+    // Szczegóły acceptance criteria
+    if (featureMap && featureMap.features && featureMap.features[idx]) {
+      console.log(`  Acceptance Criteria:`);
+      featureMap.features[idx].acceptance_criteria.forEach((ac: any) => {
+        console.log(`    ${ac.description} (S:${ac.severity ?? '-'}, C:${ac.complexity ?? '-'}, R:${ac.risk ?? '-'})`);
+      });
+    }
     Object.entries(f.coverage).forEach(([tag, percent]) => {
       if (percent === 'NA') {
         console.log(`    ${tag}: NA`);
@@ -197,15 +250,27 @@ function printCoverageToTerminal(result: any) {
 }
 
 function saveCoverageToTxt(result: any, filePath: string) {
-  const featureMap = (global as any).featureMap || null;
   let txt = 'Feature Coverage Report\n';
   txt += 'Coverage Summary:\n';
   Object.entries(result.totalCoverage).forEach(([tag, percent]) => {
     txt += `  ${tag}: ${percent}%\n`;
   });
+  txt += '\nRBT - Severity & Risk dla funkcji:\n';
+  txt += 'Feature | Severity | Risk\n';
+  result.features.forEach((f: any) => {
+    txt += `${f.name} | ${f.severity ?? '-'} | ${f.risk ?? '-'}\n`;
+  });
+  const featureMap = (global as any).featureMap || null;
   txt += '\nFeature details:\n';
   result.features.forEach((f: any, idx: number) => {
-    txt += `- ${f.name}\n`;
+  txt += `- ${f.name} (S:${f.severity ?? '-'}, R:${f.risk ?? '-'})\n`;
+    // Szczegóły acceptance criteria
+    if (featureMap && featureMap.features && featureMap.features[idx]) {
+      txt += `  Acceptance Criteria:\n`;
+      featureMap.features[idx].acceptance_criteria.forEach((ac: any) => {
+        txt += `    ${ac.description} (S:${ac.severity ?? '-'}, C:${ac.complexity ?? '-'}, R:${ac.risk ?? '-'})\n`;
+      });
+    }
     Object.entries(f.coverage).forEach(([tag, percent]) => {
       if (percent === 'NA') {
         txt += `    ${tag}: NA\n`;
@@ -259,13 +324,23 @@ function main() {
   const featureMapPath = path.resolve('featureMap.yml');
   const featureMap = loadFeatureMap(featureMapPath);
   const result = calculateCoverage(featureMap.features);
-  // przekazujemy featureMap do globalnego obiektu, by był dostępny w raportach
   (global as any).featureMap = featureMap;
   const html = generateHtmlReport(result);
   fs.writeFileSync(path.resolve('coverage_report.html'), html);
   saveCoverageToTxt(result, path.resolve('coverage_report.txt'));
-  printCoverageToTerminal(result);
-  console.log('Coverage report generated: coverage_report.html & coverage_report.txt');
+  // obsługa flagi -rbt
+  const args = process.argv.slice(2);
+  if (args.includes('-rbt')) {
+    // tylko tabela RBT
+    console.log('\nRBT - Severity & Risk dla funkcji:');
+    console.log('Feature | Severity | Risk');
+    result.features.forEach((f: any) => {
+      console.log(`${f.name} | ${f.severity ?? '-'} | ${f.risk ?? '-'}`);
+    });
+  } else {
+    printCoverageToTerminal(result);
+    console.log('Coverage report generated: coverage_report.html & coverage_report.txt');
+  }
 }
 
 main();
