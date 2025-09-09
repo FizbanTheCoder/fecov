@@ -1,18 +1,23 @@
 {
-  "name": "feature-coverage-bytest",
+  "name": "fecov",
   "version": "1.0.0",
   "main": "coverage_calc.ts",
   "scripts": {
     "build": "tsc",
     "start": "node dist/coverage_calc.js",
-    "fecobyte": "npm run build && node dist/coverage_calc.js"
+    "fecov_coverage": "npm run build && node dist/coverage_calc.js",
+  "fecov_generateTestPlan": "npm run build && node dist/generateTestPlan.js",
+    "fecov_generateTestRunResults": "npm run build && node dist/generateTestRunResults.js",
+    "fecov_generateTestReport": "npm run build && node dist/generateTestReport.js"
   },
   "dependencies": {
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "yargs": "^18.0.0"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^24.3.1",
+    "@types/yargs": "^17.0.33",
     "typescript": "^5.0.0"
   }
 }

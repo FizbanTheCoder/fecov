@@ -1,6 +1,8 @@
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 import * as path from 'path';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 
 interface AcceptanceCriteria {
   description: string;
@@ -9,6 +11,7 @@ interface AcceptanceCriteria {
   severity?: number;
   complexity?: number;
   risk?: number;
+  for_test?: boolean;
   test_cases?: {
     manual?: string[];
     automate?: string[];
@@ -20,6 +23,7 @@ interface Feature {
   tags: string[];
   severity?: number;
   risk?: number;
+  for_test?: boolean;
   acceptance_criteria: AcceptanceCriteria[];
 }
 
@@ -320,27 +324,66 @@ function saveCoverageToTxt(result: any, filePath: string) {
   fs.writeFileSync(filePath, txt);
 }
 
-function main() {
-  const featureMapPath = path.resolve('featureMap.yml');
-  const featureMap = loadFeatureMap(featureMapPath);
-  const result = calculateCoverage(featureMap.features);
-  (global as any).featureMap = featureMap;
-  const html = generateHtmlReport(result);
-  fs.writeFileSync(path.resolve('coverage_report.html'), html);
-  saveCoverageToTxt(result, path.resolve('coverage_report.txt'));
-  // obsługa flagi -rbt
-  const args = process.argv.slice(2);
-  if (args.includes('-rbt')) {
-    // tylko tabela RBT
-    console.log('\nRBT - Severity & Risk dla funkcji:');
-    console.log('Feature | Severity | Risk');
-    result.features.forEach((f: any) => {
-      console.log(`${f.name} | ${f.severity ?? '-'} | ${f.risk ?? '-'}`);
-    });
-  } else {
-    printCoverageToTerminal(result);
-    console.log('Coverage report generated: coverage_report.html & coverage_report.txt');
-  }
-}
+// ...existing code...
+async function main() {
+  const argv = await yargs(hideBin(process.argv))
+    .option('featureMap', {
+      alias: 'f',
+      type: 'string',
+      description: 'Ścieżka do pliku featureMap.yml',
+      default: 'featureMap.yml'
+    })
+    .option('output', {
+      alias: 'o',
+      type: 'string',
+      description: 'Folder na raporty',
+      default: 'reports'
+    })
+    .option('rbt', {
+      type: 'boolean',
+      description: 'Tylko tabela RBT',
+      default: false
+    })
+    .help()
+    .parse();
 
-main();
+  const outputDir = path.resolve(argv.output);
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
+  // Find all *.fecov.yml files in workspace root
+  const workspaceDir = process.cwd();
+  const fecovFiles = fs.readdirSync(workspaceDir).filter(f => f.endsWith('.fecov.yml'));
+  if (fecovFiles.length === 0) {
+    console.error('Brak plików *.fecov.yml w katalogu projektu!');
+    return;
+  }
+  for (const file of fecovFiles) {
+    const featureMapPath = path.join(workspaceDir, file);
+    const baseName = path.basename(file, '.fecov.yml');
+    const featureMap = loadFeatureMap(featureMapPath);
+    const result = calculateCoverage(featureMap.features);
+    (global as any).featureMap = featureMap;
+    const html = generateHtmlReport(result);
+    const now = new Date();
+    const dateStr = now.toISOString().replace(/[:.]/g, '-').slice(0,19);
+    const htmlPath = path.join(outputDir, `${baseName}_coverage_report_${dateStr}.html`);
+    const txtPath = path.join(outputDir, `${baseName}_coverage_report_${dateStr}.txt`);
+    fs.writeFileSync(htmlPath, html);
+    saveCoverageToTxt(result, txtPath);
+    if (argv.rbt) {
+      // tylko tabela RBT
+      console.log(`\nRBT - Severity & Risk dla funkcji (${baseName}):`);
+      console.log('Feature | Severity | Risk');
+      result.features.forEach((f: any) => {
+        console.log(`${f.name} | ${f.severity ?? '-'} | ${f.risk ?? '-'}`);
+      });
+    } else {
+      printCoverageToTerminal(result);
+      console.log(`Coverage report generated: ${htmlPath} & ${txtPath}`);
+    }
+  }
+  }
+  main();
+
+// ...existing code...
