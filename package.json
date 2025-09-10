@@ -10,7 +10,8 @@
     "fecov_generateTestPlan": "npm run build && node --loader ts-node/esm src/generateTestPlan.ts",
     "fecov_generateTestRunResults": "npm run build && node --loader ts-node/esm src/generateTestRunResults.ts",
   "fecov_generateTestReport": "npm run build && node --loader ts-node/esm src/generateTestReport.ts",
-  "fecov_rbt": "npm run build && node --loader ts-node/esm src/generateRiskReport.ts"
+  "fecov_rbt": "npm run build && node --loader ts-node/esm src/generateRiskReport.ts",
+  "fecov_FECOVRBT": "npm run build && node --loader ts-node/esm src/generateFecovRBTReport.ts"
   },
   "dependencies": {
     "js-yaml": "^4.1.0",
