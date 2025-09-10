@@ -9,7 +9,8 @@
     "fecov_coverage": "npm run build && node --loader ts-node/esm src/coverage_calc.ts",
     "fecov_generateTestPlan": "npm run build && node --loader ts-node/esm src/generateTestPlan.ts",
     "fecov_generateTestRunResults": "npm run build && node --loader ts-node/esm src/generateTestRunResults.ts",
-    "fecov_generateTestReport": "npm run build && node --loader ts-node/esm src/generateTestReport.ts"
+  "fecov_generateTestReport": "npm run build && node --loader ts-node/esm src/generateTestReport.ts",
+  "fecov_rbt": "npm run build && node --loader ts-node/esm src/generateRiskReport.ts"
   },
   "dependencies": {
     "js-yaml": "^4.1.0",

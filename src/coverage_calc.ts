@@ -36,16 +36,17 @@ function loadFeatureMap(filePath: string): FeatureMap {
   return yaml.load(file) as FeatureMap;
 }
 
-type TagType = 'manualUI' | 'manualAPI' | 'automateUI' | 'automateAPI';
+type TagType = 'manualUI' | 'manualAPI' | 'automateUI' | 'automateAPI' | 'exploratoryTesting';
 
 function calculateCoverage(features: Feature[]) {
-  const tagTypes: TagType[] = ['manualUI', 'manualAPI', 'automateUI', 'automateAPI'];
+  const tagTypes: TagType[] = ['manualUI', 'manualAPI', 'automateUI', 'automateAPI', 'exploratoryTesting'];
   const featureResults: any[] = [];
   const tagTotals: Record<TagType, { total: number, covered: number }> = {
     manualUI: { total: 0, covered: 0 },
     manualAPI: { total: 0, covered: 0 },
     automateUI: { total: 0, covered: 0 },
-    automateAPI: { total: 0, covered: 0 }
+    automateAPI: { total: 0, covered: 0 },
+    exploratoryTesting: { total: 0, covered: 0 }
   };
 
   // sortujemy features po severity malejąco
@@ -55,7 +56,8 @@ function calculateCoverage(features: Feature[]) {
       manualUI: { total: 0, covered: 0 },
       manualAPI: { total: 0, covered: 0 },
       automateUI: { total: 0, covered: 0 },
-      automateAPI: { total: 0, covered: 0 }
+      automateAPI: { total: 0, covered: 0 },
+      exploratoryTesting: { total: 0, covered: 0 }
     };
     // kalkulacja risk dla acceptance criteria
     feature.acceptance_criteria.forEach(ac => {
@@ -177,7 +179,7 @@ function generateHtmlReport(result: any) {
   html += `<h2>RBT - Severity & Risk dla funkcji</h2>`;
   html += `<table border="1"><tr><th>Feature</th><th>Severity</th><th>Risk</th></tr>`;
   result.features.forEach((f: any) => {
-    html += `<tr><td>${f.name}</td><td>${f.severity ?? '-'}</td><td>${f.risk ?? '-'}</td></tr>`;
+    html += `<tr><td>${f.name}</td><td>${f.severity ?? '-'}<\/td><td>${f.risk ?? '-'}<\/td></tr>`;
   });
   html += `</table>`;
   html += `</body></html>`;
@@ -186,140 +188,36 @@ function generateHtmlReport(result: any) {
 function printCoverageToTerminal(result: any) {
   // Tabela RBT dla funkcji
   console.log('\nRBT - Severity & Risk dla funkcji:');
-  console.log('Feature | Severity | Risk');
+  console.log('Feature | Tags | Severity | Risk');
   result.features.forEach((f: any) => {
-    console.log(`${f.name} | ${f.severity ?? '-'} | ${f.risk ?? '-'}`);
+    console.log(`${f.name} | ${Array.isArray(f.tags) ? f.tags.join(', ') : '-'} | ${f.severity ?? '-'} | ${f.risk ?? '-'}`);
   });
-  console.log('Feature Coverage Report');
-  console.log('Coverage Summary:');
-  Object.entries(result.totalCoverage).forEach(([tag, percent]) => {
-    console.log(`  ${tag}: ${percent}%`);
-  });
-  console.log('\nFeature details:');
-  const featureMap = (global as any).featureMap || null;
-  result.features.forEach((f: any, idx: number) => {
-  console.log(`- ${f.name} (S:${f.severity ?? '-'}, R:${f.risk ?? '-'})`);
-    // Szczegóły acceptance criteria
-    if (featureMap && featureMap.features && featureMap.features[idx]) {
-      console.log(`  Acceptance Criteria:`);
-      featureMap.features[idx].acceptance_criteria.forEach((ac: any) => {
-        console.log(`    ${ac.description} (S:${ac.severity ?? '-'}, C:${ac.complexity ?? '-'}, R:${ac.risk ?? '-'})`);
-      });
-    }
-    Object.entries(f.coverage).forEach(([tag, percent]) => {
-      if (percent === 'NA') {
-        console.log(`    ${tag}: NA`);
-      } else {
-        console.log(`    ${tag}: ${percent}%`);
-      }
+  console.log('\nLista wszystkich features i acceptance criteria:');
+  result.features.forEach((f: any) => {
+    console.log(`- ${f.name} (S:${f.severity ?? '-'}, R:${f.risk ?? '-'})`);
+    console.log(`  Tagi: ${Array.isArray(f.tags) ? f.tags.join(', ') : '-'}`);
+    console.log(`  Acceptance Criteria:`);
+    f.acceptance_criteria.forEach((ac: any) => {
+      console.log(`    ${ac.description} | Tagi: ${Array.isArray(ac.tags) ? ac.tags.join(', ') : '-'} | Severity: ${ac.severity ?? '-'} | Complexity: ${ac.complexity ?? '-'}`);
     });
-    console.log(`    Summary: ${f.summaryCoverage === 'NA' ? 'NA' : f.summaryCoverage + '%'}`);
-    // Test case display
-    let manualCases: string[] = [];
-    let automateCases: string[] = [];
-    if (featureMap && featureMap.features && featureMap.features[idx]) {
-      featureMap.features[idx].acceptance_criteria.forEach((ac: any) => {
-        if (ac.test_cases?.manual) manualCases.push(...ac.test_cases.manual);
-        if (ac.test_cases?.automate) automateCases.push(...ac.test_cases.automate);
-      });
-    }
-    if (manualCases.length) console.log(`    Manual Test Cases: ${manualCases.join(', ')}`);
-    if (automateCases.length) console.log(`    Automate Test Cases: ${automateCases.join(', ')}`);
-  });
-  // Sekcja TODO i inProgress
-  if (featureMap) {
-    let todoRows = '';
-    let inProgressRows = '';
-    featureMap.features.forEach((feature: any) => {
-      feature.acceptance_criteria.forEach((ac: any) => {
-        if (ac.status === 'TODO') {
-          todoRows += `TODO: ${feature.name} - ${ac.description}` + '\n';
-        }
-        if (ac.status === 'inProgress' || ac.status === 'InProgress') {
-          inProgressRows += `InProgress: ${feature.name} - ${ac.description}` + '\n';
-        }
-      });
-    });
-    if (todoRows) console.log('\nAcceptance Criteria w statusie TODO (turkusowy):\n' + todoRows);
-    if (inProgressRows) console.log('\nAcceptance Criteria w statusie InProgress (pomarańczowy):\n' + inProgressRows);
-  }
-  // Całkowite pokrycie: średnia z summaryCoverage wszystkich features (pomijając NA)
-  const summaryValues = result.features.map((f: any) => typeof f.summaryCoverage === 'number' ? f.summaryCoverage : null).filter((v: number | null): v is number => v !== null);
-  const totalSummary = summaryValues.length ? Math.round(summaryValues.reduce((a: number, b: number) => a+b, 0)/summaryValues.length) : 'NA';
-  console.log(`\nCałkowite pokrycie: ${totalSummary === 'NA' ? 'NA' : totalSummary + '%'}`);
-  console.log('Pokrycie dla każdego taga:');
-  Object.entries(result.totalCoverage).forEach(([tag, percent]) => {
-    console.log(`  ${tag}: ${percent}%`);
   });
 }
 
 function saveCoverageToTxt(result: any, filePath: string) {
-  let txt = 'Feature Coverage Report\n';
-  txt += 'Coverage Summary:\n';
-  Object.entries(result.totalCoverage).forEach(([tag, percent]) => {
-    txt += `  ${tag}: ${percent}%\n`;
-  });
+  let txt = 'Feature Risk & RBT Report\n';
   txt += '\nRBT - Severity & Risk dla funkcji:\n';
-  txt += 'Feature | Severity | Risk\n';
+  txt += 'Feature | Tags | Severity | Risk\n';
   result.features.forEach((f: any) => {
-    txt += `${f.name} | ${f.severity ?? '-'} | ${f.risk ?? '-'}\n`;
+    txt += `${f.name} | ${Array.isArray(f.tags) ? f.tags.join(', ') : '-'} | ${f.severity ?? '-'} | ${f.risk ?? '-'}\n`;
   });
-  const featureMap = (global as any).featureMap || null;
-  txt += '\nFeature details:\n';
-  result.features.forEach((f: any, idx: number) => {
-  txt += `- ${f.name} (S:${f.severity ?? '-'}, R:${f.risk ?? '-'})\n`;
-    // Szczegóły acceptance criteria
-    if (featureMap && featureMap.features && featureMap.features[idx]) {
-      txt += `  Acceptance Criteria:\n`;
-      featureMap.features[idx].acceptance_criteria.forEach((ac: any) => {
-        txt += `    ${ac.description} (S:${ac.severity ?? '-'}, C:${ac.complexity ?? '-'}, R:${ac.risk ?? '-'})\n`;
-      });
-    }
-    Object.entries(f.coverage).forEach(([tag, percent]) => {
-      if (percent === 'NA') {
-        txt += `    ${tag}: NA\n`;
-      } else {
-        txt += `    ${tag}: ${percent}%\n`;
-      }
+  txt += '\nLista wszystkich features i acceptance criteria:\n';
+  result.features.forEach((f: any) => {
+    txt += `- ${f.name} (S:${f.severity ?? '-'}, R:${f.risk ?? '-'})\n`;
+    txt += `  Tagi: ${Array.isArray(f.tags) ? f.tags.join(', ') : '-'}\n`;
+    txt += `  Acceptance Criteria:\n`;
+    f.acceptance_criteria.forEach((ac: any) => {
+      txt += `    ${ac.description} | Tagi: ${Array.isArray(ac.tags) ? ac.tags.join(', ') : '-'} | Severity: ${ac.severity ?? '-'} | Complexity: ${ac.complexity ?? '-'}\n`;
     });
-    txt += `    Summary: ${f.summaryCoverage === 'NA' ? 'NA' : f.summaryCoverage + '%'}\n`;
-    // Test case display
-    let manualCases: string[] = [];
-    let automateCases: string[] = [];
-      if (featureMap && featureMap.features && featureMap.features[idx]) {
-        featureMap.features[idx].acceptance_criteria.forEach((ac: any) => {
-          if (ac.test_cases?.manual) manualCases.push(...ac.test_cases.manual);
-          if (ac.test_cases?.automate) automateCases.push(...ac.test_cases.automate);
-        });
-      }
-    if (manualCases.length) txt += `    Manual Test Cases: ${manualCases.join(', ')}\n`;
-    if (automateCases.length) txt += `    Automate Test Cases: ${automateCases.join(', ')}\n`;
-  });
-  // usunięto powieloną deklarację featureMap
-  // Sekcja TODO i inProgress
-  if (featureMap) {
-    let todoRows = '';
-    let inProgressRows = '';
-    featureMap.features.forEach((feature: any) => {
-      feature.acceptance_criteria.forEach((ac: any) => {
-        if (ac.status === 'TODO') {
-          todoRows += `TODO: ${feature.name} - ${ac.description}` + '\n';
-        }
-        if (ac.status === 'inProgress' || ac.status === 'InProgress') {
-          inProgressRows += `InProgress: ${feature.name} - ${ac.description}` + '\n';
-        }
-      });
-    });
-    if (todoRows) txt += `\nAcceptance Criteria w statusie TODO (turkusowy):\n` + todoRows;
-    if (inProgressRows) txt += `\nAcceptance Criteria w statusie InProgress (pomarańczowy):\n` + inProgressRows;
-  }
-  // Całkowite pokrycie: średnia z summaryCoverage wszystkich features (pomijając NA)
-  const summaryValues = result.features.map((f: any) => typeof f.summaryCoverage === 'number' ? f.summaryCoverage : null).filter((v: number | null): v is number => v !== null);
-  const totalSummary = summaryValues.length ? Math.round(summaryValues.reduce((a: number, b: number) => a+b, 0)/summaryValues.length) : 'NA';
-  txt += `\nCałkowite pokrycie: ${totalSummary === 'NA' ? 'NA' : totalSummary + '%'}\n`;
-  txt += 'Pokrycie dla każdego taga:\n';
-  Object.entries(result.totalCoverage).forEach(([tag, percent]) => {
-    txt += `  ${tag}: ${percent}%\n`;
   });
   fs.writeFileSync(filePath, txt);
 }
