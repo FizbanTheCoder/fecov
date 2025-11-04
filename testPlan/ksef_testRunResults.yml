@@ -1,0 +1,10 @@
+test_run:
+  - feature: DB- Dodanie nowego obiektu FakturaKSeF ze wszystkimi parametrami (ID, statusy, XML, XFX info, XFX odpowiedź)
+    passed: true
+    acceptance_criteria:
+      - description: >-
+          Pole [fksef_XFX_Status] przyjmuje wyłącznie wartości NotStarted, Received, Receiving, Processing,
+          ReadyForDispatch, Sending, KSeFNumberReceived, Archived.
+        passed: true
+        how_tested: manual
+        notes: ''

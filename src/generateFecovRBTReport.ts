@@ -37,14 +37,14 @@ function generateFecovRBTReportHtml(featureMap: FeatureMap): string {
   const tagStats: Record<string, { total: number, done: number }> = {};
   tagTypes.forEach(tag => tagStats[tag] = { total: 0, done: 0 });
   featureMap.features.forEach(f => {
-    f.acceptance_criteria.forEach(ac => {
-      ac.tags.forEach(tag => {
-        if (tagStats[tag]) {
-          tagStats[tag].total++;
-          if (ac.status === true || ac.status === 'true') tagStats[tag].done++;
-        }
+      f.acceptance_criteria.forEach(ac => {
+        (Array.isArray(ac.tags) ? ac.tags : []).forEach(tag => {
+          if (tagStats[tag]) {
+            tagStats[tag].total++;
+            if (ac.status === true || ac.status === 'true') tagStats[tag].done++;
+          }
+        });
       });
-    });
   });
   html += `<h2>Pokrycie ilościowe dla typów tagów</h2><ul>`;
   tagTypes.forEach(tag => {
@@ -91,13 +91,39 @@ function main() {
   for (const file of fecovFiles) {
     const featureMapPath = path.join(workspaceDir, file);
     const baseName = path.basename(file, '.fecov.yml');
+    console.log(`Przetwarzam plik: ${featureMapPath}`);
     const featureMap = loadFeatureMap(featureMapPath);
+    console.log(`Liczba features: ${featureMap.features.length}`);
+    featureMap.features.forEach((f, idx) => {
+      console.log(`  Feature[${idx}]: ${f.name}, acceptance_criteria: ${f.acceptance_criteria.length}`);
+      f.acceptance_criteria.forEach((ac, acIdx) => {
+        console.log(`    AC[${acIdx}]: ${ac.description}`);
+      });
+    });
     const html = generateFecovRBTReportHtml(featureMap);
     const now = new Date();
     const dateStr = now.toISOString().replace(/[:.]/g, '-').slice(0,19);
     const htmlPath = path.join('reports', `${baseName}_fecovRBT_report_${dateStr}.html`);
     fs.writeFileSync(htmlPath, html);
     console.log(`FECOV RBT report generated: ${htmlPath}`);
+
+    // Generowanie PDF z HTML
+    (async () => {
+      try {
+        const puppeteerModule = await import('puppeteer');
+        const browser = await puppeteerModule.default.launch({
+          executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe',
+        });
+        const page = await browser.newPage();
+        await page.goto('file://' + path.resolve(htmlPath), { waitUntil: 'networkidle0' });
+        const pdfPath = htmlPath.replace(/\.html$/, '.pdf');
+        await page.pdf({ path: pdfPath, format: 'A4' });
+        await browser.close();
+        console.log(`FECOV RBT PDF report generated: ${pdfPath}`);
+      } catch (err) {
+        console.error('Błąd generowania PDF:', err);
+      }
+    })();
   }
 }
 

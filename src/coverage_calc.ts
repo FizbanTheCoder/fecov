@@ -259,7 +259,15 @@ async function main() {
   for (const file of fecovFiles) {
     const featureMapPath = path.join(workspaceDir, file);
     const baseName = path.basename(file, '.fecov.yml');
+    console.log(`Przetwarzam plik: ${featureMapPath}`);
     const featureMap = loadFeatureMap(featureMapPath);
+    console.log(`Liczba features: ${featureMap.features.length}`);
+    featureMap.features.forEach((f, idx) => {
+      console.log(`  Feature[${idx}]: ${f.name}, acceptance_criteria: ${f.acceptance_criteria.length}`);
+      f.acceptance_criteria.forEach((ac, acIdx) => {
+        console.log(`    AC[${acIdx}]: ${ac.description}`);
+      });
+    });
     const result = calculateCoverage(featureMap.features);
     (global as any).featureMap = featureMap;
     const html = generateHtmlReport(result);

@@ -9,19 +9,20 @@
     "fecov_coverage": "npm run build && node --loader ts-node/esm src/coverage_calc.ts",
     "fecov_generateTestPlan": "npm run build && node --loader ts-node/esm src/generateTestPlan.ts",
     "fecov_generateTestRunResults": "npm run build && node --loader ts-node/esm src/generateTestRunResults.ts",
-  "fecov_generateTestReport": "npm run build && node --loader ts-node/esm src/generateTestReport.ts",
-  "fecov_rbt": "npm run build && node --loader ts-node/esm src/generateRiskReport.ts",
-  "fecov_FECOVRBT": "npm run build && node --loader ts-node/esm src/generateFecovRBTReport.ts"
+    "fecov_generateTestReport": "npm run build && node --loader ts-node/esm src/generateTestReport.ts",
+    "fecov_rbt": "npm run build && node --loader ts-node/esm src/generateRiskReport.ts",
+    "fecov_RBT": "npm run build && node --loader ts-node/esm src/generateFecovRBTReport.ts"
   },
   "dependencies": {
     "js-yaml": "^4.1.0",
+    "puppeteer": "^24.20.0",
     "yargs": "^18.0.0"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^24.3.1",
     "@types/yargs": "^17.0.33",
-    "typescript": "^5.0.0",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.0"
   }
 }

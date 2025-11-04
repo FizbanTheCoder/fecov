@@ -1,0 +1,134 @@
+features:
+# --- Sekcja faza pierwsza ---
+  - name: E2e testy API
+    phase: Faza pierwsza
+    tags: [automateAPI]
+    acceptance_criteria:
+      - description: Przetworzenie faktury przez ksef status 7
+        tags: [automateAPI]
+        status: true
+        phase: Faza pierwsza
+  - name: POST /api/Identity/login
+    tags: [automateAPI]
+    phase: Faza pierwsza
+    acceptance_criteria:
+      - description: Poprawne logowanie (200, LoginResponseDto)
+        tags: [automateAPI]
+        status: true
+        phase: Faza pierwsza
+      - description: Logowanie z błędnymi danymi (401/403)
+        tags: [automateAPI]
+        status: true
+        phase: Faza pierwsza
+      - description: Brak danych logowania (400)
+        tags: [automateAPI]
+        status: true
+        phase: Faza pierwsza
+  - name: POST /api/Invoices
+    phase: Faza pierwsza
+    tags: [automateAPI]
+    acceptance_criteria:
+      - description: Dodanie poprawnej faktury pełne body (200)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Dodanie poprawnej faktury tylko pola wymagane (200)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Dodanie faktury z brakującymi wymaganymi danymi (400)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Dodanie faktury z tagami weryfikacja tagów
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+  - name: GET /api/Invoices
+    tags: [automateAPI]
+    phase: Faza pierwsza
+    acceptance_criteria:
+      - description: Pobranie listy faktur z parametrami (200, InvoicePagedResponseKeysetDto)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Pobranie listy faktur bez parametrów (200)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Próba pobrania faktur z niepoprawnymi parametrami (400)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Brak autoryzacji (401/403)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+  - name: POST /api/Invoices/updateStatus
+    phase: Faza pierwsza
+    tags: [automateAPI]
+    acceptance_criteria:
+      - description: Poprawna zmiana statusu faktury niekompletne body (200)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Poprawna zmiana statusu faktury kompletne body (200)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Zmiana statusu bez autoryzacji (401/403)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Brak danych wejściowych (404)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+  - name: GET /api/Invoices/{id}
+    phase: Faza pierwsza
+    tags: [automateAPI]
+    acceptance_criteria:
+      - description: Pobranie faktury po ID (200, InvoiceDTO)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Pobranie nieistniejącej faktury (404)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Brak autoryzacji (401/403)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+  - name: POST /api/Invoices/{id}/xfx/send
+    tags: [automateAPI]
+    phase: Faza pierwsza
+    acceptance_criteria:
+      - description: Poprawne wysłanie faktury do XFX (200, boolean)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Wysłanie z niepoprawnym ID (400/404)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Brak autoryzacji (401/403)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+- name: autoryzacja towarów kodów ean
+  tags: [e2e, automateUI]
+  phase: 1.2
+  acceptance_criteria:
+    - description: dodawanie towaru z wszsytkimi danymi
+      tags: [e2e, automateUI]
+      status: false
+      phase: 1.2
+    - description: dodawanie towaru z wymaganymi danymi
+      tags: [e2e, automateUI]
+      status: false
+      phase: 1.2
+    - description: edytowanie towaru
+      tags: [e2e, automateUI]
+      status: false
+      phase: 1.2
