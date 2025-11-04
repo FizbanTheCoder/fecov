@@ -1,0 +1,592 @@
+features:
+# --- Sekcja faza pierwsza ---
+  - name: E2e testy API
+    phase: Faza pierwsza
+    tags: [automateAPI]
+    acceptance_criteria:
+      - description: Przetworzenie faktury przez ksef status 7
+        tags: [automateAPI]
+        status: true
+        phase: Faza pierwsza
+  - name: POST /api/Identity/login
+    tags: [automateAPI]
+    phase: Faza pierwsza
+    acceptance_criteria:
+      - description: Poprawne logowanie (200, LoginResponseDto)
+        tags: [automateAPI]
+        status: true
+        phase: Faza pierwsza
+      - description: Logowanie z błędnymi danymi (401/403)
+        tags: [automateAPI]
+        status: true
+        phase: Faza pierwsza
+      - description: Brak danych logowania (400)
+        tags: [automateAPI]
+        status: true
+        phase: Faza pierwsza
+  - name: POST /api/Invoices
+    phase: Faza pierwsza
+    tags: [automateAPI]
+    acceptance_criteria:
+      - description: Dodanie poprawnej faktury pełne body (200)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Dodanie poprawnej faktury tylko pola wymagane (200)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Dodanie faktury z brakującymi wymaganymi danymi (400)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Dodanie faktury z tagami weryfikacja tagów
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+  - name: GET /api/Invoices
+    tags: [automateAPI]
+    phase: Faza pierwsza
+    acceptance_criteria:
+      - description: Pobranie listy faktur z parametrami (200, InvoicePagedResponseKeysetDto)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Pobranie listy faktur bez parametrów (200)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Próba pobrania faktur z niepoprawnymi parametrami (400)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Brak autoryzacji (401/403)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+  - name: POST /api/Invoices/updateStatus
+    phase: Faza pierwsza
+    tags: [automateAPI]
+    acceptance_criteria:
+      - description: Poprawna zmiana statusu faktury niekompletne body (200)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Poprawna zmiana statusu faktury kompletne body (200)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Zmiana statusu bez autoryzacji (401/403)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Brak danych wejściowych (404)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+  - name: GET /api/Invoices/{id}
+    phase: Faza pierwsza
+    tags: [automateAPI]
+    acceptance_criteria:
+      - description: Pobranie faktury po ID (200, InvoiceDTO)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Pobranie nieistniejącej faktury (404)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Brak autoryzacji (401/403)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+  - name: POST /api/Invoices/{id}/xfx/send
+    tags: [automateAPI]
+    phase: Faza pierwsza
+    acceptance_criteria:
+      - description: Poprawne wysłanie faktury do XFX (200, boolean)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Wysłanie z niepoprawnym ID (400/404)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Brak autoryzacji (401/403)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+  - name: POST /api/Invoices/{id}/station/send
+    tags: [automateAPI]
+    acceptance_criteria:
+      - description: Poprawne wysłanie faktury do stacji (200, boolean)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: false
+      - description: Wysłanie z niepoprawnym ID (400/404)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: false
+      - description: Brak autoryzacji (401/403)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: false
+  - name: GET /api/Invoices/{id}/logs
+    tags: [automateAPI]
+    phase: Faza pierwsza
+    acceptance_criteria:
+      - description: Pobranie logów faktury (200, InvoiceLogDto)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: false
+      - description: Pobranie logów nieistniejącej faktury (404)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: false
+      - description: Brak autoryzacji (401/403)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: false
+  - name: GET /api/Invoices/{id}/statuses
+    tags: [automateAPI]
+    phase: Faza pierwsza
+    acceptance_criteria:
+      - description: Pobranie statusu faktury (200, DictionaryDto)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+      - description: Pobranie statusu nieistniejącej faktury (404)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: true
+  - name: Get /api/Invoices/{invoiceNumber}/pdf
+    tags: [automateAPI]
+    phase: Faza pierwsza
+    acceptance_criteria:
+      - description: Pobranie PDF faktury (200, application/pdf)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: false
+      - description: Pobranie PDF nieistniejącej faktury (404)
+        phase: Faza pierwsza
+        tags: [automateAPI]
+        status: false
+# --- Sekcja faza druga ---
+  - name: DB-  Rozbudowanie obiektu faktura o informacje czy KSEF
+    phase: Faza druga
+    tags: [exploratoryTesting]
+    acceptance_criteria:
+      - description: Obiekt Faktura posiada pole fkt_KSEF typu boolean 
+        phase: Faza druga
+        tags: [exploratoryTesting]
+        status: false
+      - description: Domyślna wartość dla fkt_KSEF to false
+        phase: Faza druga
+        tags: [exploratoryTesting]
+        status: false
+      - description: Aktualnie istniejące faktury posiadają fkt_KSEF o wartości false
+        phase: Faza druga
+        tags: [exploratoryTesting]
+        status: false
+  - name: DB- Dodanie nowego obiektu FakturaKSeF ze wszystkimi parametrami (ID, statusy, XML, XFX info, XFX odpowiedź)
+    phase: Faza druga
+    for_test: true
+    tags: [exploratoryTesting]
+    acceptance_criteria:
+      - description: Została utworzona nowa tablica [dbo].[FakturaKSeF] przechpowująca dodatkowe atrybuty dla KSeF dla faktur z NIP, podlegajacych XFX
+        phase: Faza druga
+        tags: [exploratoryTesting]
+        status: false
+      - description: Każdy rekord w [FakturaKSeF] jest powiązany relacją 1:1 z istniejącą fakturą poprzez klucz obcy [fkt_id].
+        phase: Faza druga
+        tags: [exploratoryTesting]
+        status: false
+      - description: Tablica [FakturaKSeF] zawiera pola fksef_id, fkt_id, fksef_status, fksef_LastTryDate, fksef_SuccessDate, fksef_XML, fksef_XFXodpCode, fksef_XFX_Status, fksef_XFX_SentDate, fksef_MF_KSEF_ID, fksef_KSEF_DATA, fksef_Offline, fksef_DisasterMode, fksef_linkWer.
+        phase: Faza druga
+        tags: [automateAPI]
+        status: false
+      - description: Pole [fksef_status] przyjmuje wyłącznie wartości zdefiniowane w słowniku [FakturaKSeF_statusy]
+        phase: Faza druga
+        tags: [exploratoryTesting]
+        status: false
+      - description: Pole [fksef_XFXodpCode] przyjmuje wyłącznie wartości zdefiniowane w słowniku [FakturaKSeF_KodyOdp]
+        phase: Faza druga
+        tags: [exploratoryTesting]
+        status: false
+      - description: Pole [fksef_XFX_Status] przyjmuje wyłącznie wartości NotStarted, Received, Receiving, Processing, ReadyForDispatch, Sending, KSeFNumberReceived, Archived.
+        phase: Faza druga
+        for_test: true
+        tags: [exploratoryTesting]
+        status: false
+      - description: Pole [fksef_Offline] przyjmuje wartość TRUE lub FALSE, domyślnie FALSE.
+        phase: Faza druga
+        tags: [exploratoryTesting]
+        status: false
+      - description: Pole [fksef_DisasterMode] przyjmuje wartość TRUE lub FALSE, domyślnie FALSE.
+        phase: Faza druga
+        tags: [exploratoryTesting]
+        status: false
+      - description: Pole [fksef_linkWer] generuje poprawny URL do KSeF zgodnie z regułami QR1/QR2.
+        phase: Faza druga
+        tags: [exploratoryTesting]
+        status: false
+      - description: Po utworzeniu nowego rekordu w [FakturaKSeF], domyślne wartości pól są zgodne ze specyfikacją (np. status = „Przygotowanie do wysyłki do XFX”, Offline = FALSE, DisasterMode = FALSE).
+        phase: Faza druga
+        tags: [exploratoryTesting]
+        status: false
+      - description: Aktualizacja statusów i atrybutów w [FakturaKSeF] następuje zgodnie z komunikatami zwrotnymi z XFX i KSeF.
+        phase: Faza druga
+        tags: [exploratoryTesting]
+        status: false
+      - description: System nie pozwala na zapisanie w polach statusowych i flagowych wartości spoza dozwolonego zakresu.
+        phase: Faza druga
+        tags: [exploratoryTesting]
+        status: false
+  - name: Dodanie nowej definicji faktury
+    phase: Faza druga
+    tags: [exploratoryTesting, manualUI]
+    acceptance_criteria:
+      - description: Definicja faktury KSeF
+        tags: [exploratoryTesting]
+        status: false
+        note: |
+          System posiada nową definicję faktury "Faktura KSeF" z symbolem "FVS". 
+          Definicja faktury KSeF zastępuje dotychczasową fakturę fiskalną FVF
+      - description: Proces wystawiania faktury
+        phase: Faza druga
+        tags: [manualUI]
+        status: false
+        note: |
+          Początek procesu wystawiania faktury w SGKASA nie ulega zmianie.
+          Kasjer dodaje produkty do koszyka, zamyka koszyk, wybiera formę potwierdzenia zakupu: Faktura.
+          Jeśli nabywca nie jest przypisany, kasjer wybiera nabywcę i odbiorcę (jeśli różny).
+          Kasjer wybiera formę płatności (Gotówka/Karta/Bon/Talon/Przelew).
+      - description: Rozróżnienie typów faktur
+        phase: Faza druga
+        tags: [exploratoryTesting]
+        status: false
+        note: |
+          Po wybraniu formy płatności, jeśli nabywca posiada NIP, system automatycznie ustawia typ faktury na "Faktura KSeF" (FVS).
+          Jeśli nabywca nie posiada NIP, system ustawia typ faktury na "Faktura VAT" (FVK).
+          Kasjer ma możliwość ręcznej zmiany typu faktury z FVS na FVK i odwrotnie.
+          Przy zmianie typu faktury z FVS na FVK, system wyświetla ostrzeżenie o konsekwencjach podatkowych.
+      - description: Walidacja daty KSeF
+        phase: Faza druga
+        tags: [exploratoryTesting]
+        status: false
+        note: |
+          System sprawdza, czy bieżąca data przekroczyła wartość parametru "Data KSeF faktury fiskalne".
+          Jeśli nie – proces AS-IS. 
+          Jeśli tak – system przechodzi do walidacji kontrahenta
+      - description: Walidacja kontrahenta
+        phase: Faza druga
+        tags: [exploratoryTesting]
+        status: false
+        note: |
+          System sprawdza, czy nabywca posiada NIP.
+          Jeśli nie – system ustawia typ faktury na FVK i kontynuuje proces AS-IS.
+          Jeśli tak – system przechodzi do walidacji formy płatności
+      - description: Rejestracja transakcji
+        phase: Faza druga
+        tags: [exploratoryTesting]
+        status: false
+        note: |
+          Transakcja rejestrowana w tabeli [dbo].[Paragon] oraz [dbo].[Faktura].
+          Fakturze KSeF nadawany jest prefix FVS.
+          Faktura KSeF nie otrzymuje znacznika FP (pole TypDowoduDprzedazy = 00).
+          Faktura KSeF nie jest fiskalizowana
+      - description: Obsługa parametru "Duża Awaria KSeF"
+        phase: Faza druga
+        tags: [manualUI]
+        status: false
+        note: |
+          Jeśli parametr "Duża Awaria KSeF" = True:
+            System generuje wydruk faktury na drukarce systemowej z informacją o awarii.
+          Jeśli parametr = False:
+          System wysyła dane do SAD_KSeF, następnie drukuje niefiskalne potwierdzenie sprzedaży.
+      - description: Wysyłka danych do SAD_KSeF
+        phase: Faza druga
+        tags: [exploratoryTesting]
+        status: false
+        note: |
+          System uruchamia procedurę wysyłki danych faktury KSeF do XFX.
+          Przekazywane są odpowiednie dane faktury.
+      - description: Oczekiwanie na odpowiedź
+        phase: Faza druga
+        tags: [exploratoryTesting]
+        status: false
+        note: |
+            System oczekuje na odpowiedź z numerem TrackingID, nie dłużej niż wartość parametru "Czas oczekiwania na MF_KSEF_ID" (domyślnie 2000ms
+      - description: Obsługa odpowiedzi/timeoutu
+        phase: Faza druga
+        tags: [exploratoryTesting]
+        status: false
+        note: |
+          System weryfikuje, czy NIP jest zagraniczny:
+          Jeśli tak – drukuje niefiskalne potwierdzenie sprzedaży.
+          Jeśli nie – wyświetla komunikat "Czy wydrukować potwierdzenie sprzedaży? Tak/Nie".
+          Nie – kończy proces.
+          Tak – drukuje niefiskalne potwierdzenie sprzedaży.
+      - description: Wydruk niefiskalny "Potwierdzenie dokonania transakcji"
+        phase: Faza druga
+        tags: [manualUI]
+        status: false
+        note: |
+          Wydruk nie zawiera numeru KSeF ani daty KSeF.
+          Zawiera adres URL do portalu Anwim do pobrania faktury.
+          Zawiera QR kod prowadzący do strony pobrania faktury (URL z NIP i ID faktury, znaki "/" zamienione na "-").
+          Zawiera dane identyfikujące transakcję, ale nie jest fakturą VAT.
+          Zawiera informację, że wydruk nie jest fakturą VAT w rozumieniu przepisów o KSeF.
+          Zawiera link do strony statusu i pobrania faktury KSeF.
+          QR kod generowany na podstawie parametru "URL potwierdzenia wysyłki KSeF" + NIP + ID faktury.
+          Wydruk generowany także w przypadku błędu komunikacji z XFX, jeśli faktura została lokalnie zarejestrowana.
+      - description: Wersje wydruku
+        phase: Faza druga
+        tags: [manualUI]
+        status: false
+        note: |
+         System generuje dwie wersje wydruku: na szeroki i wąski papier dla drukarek POSNET oraz NOVITUS.
+      - description: Obsługa wydruku w kasie bez numeru KSeF
+        phase: Faza druga
+        tags: [manualUI]
+        status: false
+        note: |
+          Jeśli nie zwrócono numeru KSeF lub nie była Duża Awaria, pojawia się komunikat:
+            "Faktura nie zarejestrowana w systemie KSeF, wydruk będzie możliwy dopiero po otrzymaniu odpowiedzi z KseF. Czy chcesz wydrukować potwierdzenie sprzedaży?"
+              Tak – wydruk dokumentu niefiskalnego.
+              Nie – zamknięcie komunikatu, pozostanie na liście paragonów.
+      - description: Obsługa wydruku z listy faktur (Zarządzanie)
+        phase: Faza druga
+        tags: [manualUI]
+        status: false
+        note: |
+          Jeśli nie ma numeru KSeF lub nie była Duża Awaria, pojawia się komunikat
+            "Faktura nie zarejestrowana w systemie KSeF, wydruk będzie możliwy dopiero po otrzymaniu odpowiedzi z KseF. Wydruk potwierdzenie sprzedaży możliwy jest ze stanowiska kasowego z drukarką fiskalną. OK"
+  - name: Klient SAD_KSEF
+    phase: Faza druga
+    tags: [exploratoryTesting, manualUI]
+    acceptance_criteria:
+    - description: Wysyłka faktury do SAD_KSEF
+      phase: Faza druga
+      tags: [exploratoryTesting]
+      status: false
+      note: |
+        System umożliwia wysłanie faktury w wymaganym formacie do SAD_KSEF.
+        Po wysłaniu faktury system otrzymuje potwierdzenie przyjęcia lub komunikat o błędzie.
+        W przypadku błędu system wyświetla szczegółowy komunikat i zapisuje status wysyłki.
+    - description: Pobranie statusu faktury
+      phase: Faza druga
+      tags: [exploratoryTesting]
+      status: false
+      note: |
+        System umożliwia pobranie aktualnego statusu faktury z SAD_KSEF.
+        Status jest aktualizowany w systemie i widoczny dla użytkownika.
+        W przypadku problemów z pobraniem statusu system wyświetla odpowiedni komunikat.
+    - description: Pobranie wydruku faktury
+      phase: Faza druga
+      tags: [exploratoryTesting]
+      status: false
+      note: |
+        System umożliwia pobranie wydruku faktury z SAD_KSEF w formacie PDF.
+        Wydruk zawiera wszystkie wymagane dane zgodnie ze specyfikacją SAD_KSEF.
+        W przypadku braku wydruku lub błędu system informuje użytkownika.
+  - name: Obsługa znaczników Faktura_KSeF oraz Faktura_fiskalna_KSeF
+    phase: Faza druga
+    tags: [exploratoryTesting, manualUI]
+    acceptance_criteria:
+    - description: Dodanie parametrów powiązanych z KSeF do tablicy parametrów STACJA
+      status: false
+      note: |
+        Parametr „URL potwierdzenia wysyłki KSeF” został dodany i przechowuje poprawny adres URL.
+        Parametr „Data KSeF” został dodany, typ: data (rrrr-mm-dd), nie może być NULL, musi być ustawiony przy wdrożeniu produkcyjnym.
+        Parametr „Data KSeF faktury fiskalne” został dodany, typ: data (rrrr-mm-dd), nie może być NULL, musi być ustawiony przy wdrożeniu produkcyjnym.
+        Parametr „Czas oczekiwania na MF_KSEF_ID” został dodany, typ: integer, domyślna wartość: 2000 ms, musi być ustawiony przy wdrożeniu produkcyjnym.
+        Parametr „Duża awaria KSeF” został dodany, sterowany centralnie przez SAD_KSeF, przyjmuje wartości True/False.
+        Parametry są zarządzane wyłącznie na poziomie bazy danych STACJA, bez GUI.
+    - description: System obsługuje różne daty startu dla obligatoryjnego KSeF dla faktur oraz faktur fiskalnych.
+      status: false 
+    - description: Działanie systemu w stanie awarii KSeF
+      status: false
+      note: |
+        System wystawia i drukuje faktury niefiskalne zgodnie z szablonem.
+        Faktury są wysyłane do SAD_KSeF.
+    - description: Obsługa błędów komunikacji z SAD_KSeF
+      status: false
+      note: |
+        System rejestruje błędy i ponawia próby wysyłki zgodnie z określoną logiką.
+        Użytkownik jest informowany o problemach z wysyłką faktury.
+        System zapewnia integralność danych i spójność statusów faktur.
+  - name: Blokada fiskalizacji faktur KSeF
+    phase: Faza druga
+    tags: [exploratoryTesting, manualUI]
+    acceptance_criteria:
+      - description: System STACJA sprawdza wartość parametru „Data KSeF faktury fiskalne” przy próbie wystawienia faktury fiskalnej z NIP.
+        status: false
+      - description: Działanie po przekroczeniu daty zdefiniowanej w parametrze „Data KSeF faktury fiskalne”
+        status: false
+        note: |
+          System blokuje możliwość wydruku faktury fiskalnej z NIP na drukarce fiskalnej.
+          System rozpoczyna proces wysyłki danych faktury do KSeF poprzez systemy pośredniczące.
+          Faktura z symbolem FVS jest generowana zamiast faktury FVF.
+      - description: Użytkownik otrzymuje informację o zmianie procesu i braku możliwości wydruku fiskalnego.
+        status: false
+      - description: System rejestruje fakturę KSeF zgodnie z wymaganiami i przekazuje ją do SAD_KSeF.
+        status: false
+      - description: W przypadku próby wystawienia faktury fiskalnej po przekroczeniu daty, system wyświetla odpowiedni komunikat i nie pozwala na wydruk fiskalny.
+        status: false
+  - name: W głównym oknie SGKasa zmiana z Faktura Fiskalna na Faktura
+    phase: Faza druga
+    tags: [manualUI]
+    acceptance_criteria:
+      - description: W głównym oknie SGKasa nazwa klawisza „Faktura Fiskalna” została zmieniona na „Faktura”.
+        status: false
+      - description: Po wdrożeniu zmiany użytkownik widzi nową nazwę klawisza w interfejsie głównym SGKasa.
+        status: false
+      - description: Funkcjonalność klawisza pozostaje bez zmian – zmienia się wyłącznie nazwa wyświetlana.
+        status: false
+      - description: Zmiana jest widoczna we wszystkich miejscach, gdzie wcześniej występowała nazwa „Faktura Fiskalna”.
+        status: false
+  - name: Ponawianie próby rejestracji faktury w XFX w przypadku awarii
+    phase: Faza druga
+    tags: [exploratoryTesting, manualUI]
+    acceptance_criteria:
+      - description: System wykrywa awarię komunikacji pomiędzy STACJĄ a SAD_KSEF podczas próby rejestracji faktury.
+        status: false
+      - description: W przypadku awarii system automatycznie ponawia próbę wysyłki faktury do SAD_KSEF do skutku (do uzyskania potwierdzenia lub ręcznego anulowania).
+        status: false
+      - description: Każda próba rejestracji jest rejestrowana w logach systemu z informacją o czasie i statusie.
+        status: false
+      - description: Użytkownik jest informowany o trwających próbach rejestracji oraz o ich powodzeniu lub niepowodzeniu
+        status: false
+      - description: Po skutecznej rejestracji faktury system kończy proces i aktualizuje status faktury.
+        status: false
+      - description: W przypadku ręcznego anulowania ponawiania, system przerywa próby i informuje użytkownika.
+        status: false
+  - name: Zmiany w procesie wystawiania faktur z Kasy
+    phase: Faza druga
+    tags: [manualUI]
+    acceptance_criteria:
+      - description: System umożliwia realizację standardowego procesu sprzedaży towarów z Kasy na fakturę VAT.
+        status: false
+      - description: Po zakończeniu sprzedaży generowana jest faktura fiskalna z NIP, posiadająca prefiks FVF oraz numerację w formacie FVF/MPK/XXXX/MM/RRRR
+        status: false
+      - description: Wszystkie wymagane dane faktury są poprawnie rejestrowane w systemie.
+        status: false
+      - description: W procesie wystawiania faktury wyświetlane są odpowiednie modale informacyjne i potwierdzające zgodnie z wymaganiami biznesowymi.
+        status: false
+    note: |
+        wydruki są out of scope
+  - name: Zmiana w procesie wystawiania korekt do faktur
+    phase: Faza druga
+    tags: [manualUI]
+    acceptance_criteria:
+      - description: System umożliwia wybór faktury oraz rodzaju korekty, a operator wpisuje dane do skorygowania.
+        status: false
+      - description: Po zatwierdzeniu korekty, system decyduje czy korekta podlega wysyłce do KSeF (przez XFX)
+        status: false
+        note: |
+          Faktura pierwotna wystawiona na nabywcę z NIP (PL lub zagraniczny).
+          Data wystawienia korekty ≥ Data KSeF (obligatoryjność KSeF).
+      - description: Jeśli korekta nie podlega KSeF, system generuje i drukuje fakturę korektę jak dotychczas.
+        status: false
+      - description: Korekta podlegajaca ksef
+        status: false
+        note: |
+          System rejestruje korektę lokalnie.
+          System wysyła dane korekty do XFX/SAD_KSeF.
+          Odbiera odpowiedź (status, numer KSeF, PDF lub błąd).
+      - description: Wydruk faktury korekty
+        status: false
+        note: |
+          Jeśli otrzymano PDF z XFX, drukowany jest PDF.
+          Jeśli tryb Dużej Awarii (faktura KSeF z numerem KSeF), drukowana jest faktura z odpowiednimi oznaczeniami (brak ORYGINAŁ, brak podpisów, informacja o Dużej Awarii, referencja do faktury korygowanej i jej numeru KSeF).
+          Jeśli tryb Dużej Awarii (faktura nie-KSeF), drukowana jest faktura z odpowiednimi oznaczeniami (brak ORYGINAŁ, brak podpisów, informacja o Dużej Awarii, referencja do faktury korygowanej).
+          Jeśli korekta dotyczy faktury KSeF bez nadanego numeru KSeF, wydruk jest niemożliwy do czasu otrzymania numeru KSeF.
+          Jeśli nie otrzymano numeru KSeF/PDF, system wyświetla pop-up z pytaniem o wydruk „Potwierdzenia wysłania faktury do KSeF” (bez numeru KSeF, bez daty KSeF, z URL do portalu Anwim i QR kodem).
+          Wydruk „Potwierdzenia wysyłki” zawiera URL do portalu Anwim, QR kod z adresem portalu, numerem faktury korekty i NIP kontrahenta.          QR kod generowany jest na podstawie parametru stacji i danych faktury, zgodnie z wymaganiami (format, rozmiar).
+          Wydruk „Potwierdzenia wysyłki” jest możliwy także w przypadku błędu komunikacji z XFX, jeśli faktura została zarejestrowana lokalnie.
+      - description: System archiwizuje statusy wysyłki, odpowiedzi z KSeF/XFX oraz umożliwia przegląd historii korekt i ich statusów.
+        status: false
+      - description: W przypadku błędów podczas wysyłki korekty do KSeF, system informuje użytkownika i umożliwia ponowienie próby wysyłki.
+        status: false
+  - name: Zmiana w procesie zamykania faktur zbiorczych
+    phase: Faza druga
+    tags: [manualUI]
+    acceptance_criteria:
+      - description: Tworzenie i przypisywanie WZ-tek do faktur zbiorczych
+        status: false
+        note: |
+          System nie grupuje pozycji na fakturze zbiorcze
+          WZ-tki są przypisywane do otwartej faktury zbiorczej zgodnie z logiką [dbo].[Faktura] i [dbo].[FakPozParPoz].
+          Jeśli nie ma otwartej faktury zbiorczej, system otwiera nową.
+      - description: Zamknięcie faktury zbiorczej
+        status: false
+        note: |
+          Proces zamykania faktury zbiorczej może być zainicjowany ręcznie (SGKASA), automatycznie (ZGZARZĄDZANIE), lub automatycznie do pojedynczej WZ.
+          Początek procesu zamykania nie ulega zmianie.
+      - description: Weryfikacja trybu wystawienia faktury
+        status: false
+        note: |
+          System sprawdza, czy faktura powinna być wystawiona jako KSeF
+          Nabywca posiada NIP (polski lub zagraniczny).
+          Data bieżąca > „Data KSeF”.
+          Jeśli warunki nie są spełnione, faktura jest wystawiana i drukowana według dotychczasowych zasad.
+      - description: Wysyłka danych faktury KSeF
+        status: false
+        note: |
+         W przypadku faktury KSeF system uruchamia procedurę „Wysyłka danych faktury KSeF do XFX
+      - description: Komunikat o wysłaniu faktury do KSeF
+        status: false
+        note: |
+          Przy ręcznym zamykaniu faktury KSeF system wyświetla komunikat o wysłaniu faktury do KSeF.
+      - description: Obsługa wydruku faktury bez numeru KSeF
+        status: false
+        note: |
+          System oczekuje na odpowiedź z numerem TrackingID, nie dłużej niż wartość parametru „Czas oczekiwania na MF_KSEF_ID” (domyślnie 2000ms).
+      - description: Identyczne zasady dla WZ-opłaconych
+        status: false
+        note: |
+          Wydruk potwierdzenia sprzedaży dla WZ-opłaconych podlega tym samym zasadom.
+      - description: Obsługa błędów komunikacji z XFX
+        status: false
+        note: |
+          W przypadku błędu XFX lub braku komunikacji (np. brak sieci), jeśli faktura została lokalnie zarejestrowana, system umożliwia wydruk potwierdzenia sprzedaży zgodnie z powyższymi zasadami.
+  - name: Zmiana w procesie realizowania faktury prowizyjnej
+    phase: Faza druga
+    tags: [manualUI]
+    acceptance_criteria:
+      - description: Weryfikacja obowiązku KSeF po wygenerowaniu faktury prowizyjnej
+        status: false
+        note: |
+          Po automatycznym wygenerowaniu faktury prowizyjnej system sprawdza, czy data wystawienia faktury jest większa lub równa wartości parametru „Data KSeF”.
+          Jeśli warunek nie jest spełniony:
+          Proces kończy się.
+          Faktura jest możliwa do wydrukowania w dowolnym momencie.
+      - description: Walidacja trybu disaster (Duża Awaria KSeF)
+        status: false
+        note: |
+          Jeśli data wystawienia >= „Data KSeF”, system sprawdza wartość parametru „Duża Awaria KSeF”.
+          Jeśli „Duża Awaria KSeF” = True:
+          System generuje wydruk faktury na drukarce systemowej.
+          Wydruk zawiera informację: „NINIEJSZY WYDRUK JEST PEŁNOPRAWNĄ FAKTURĄ W ROZUMIENIU PRZEPISÓW O KSeF WYDANĄ W SYTUACJI DUŻEJ AWARII SYSTEMU KSeF”.
+          Jeśli „Duża Awaria KSeF” = False:
+          System zapisuje fakturę w rejestrze wysyłki do KSeF.
+          System wysyła metadane do SAD_KSeF.
+      - description: Wysyłka danych faktury prowizyjnej do XFX
+        status: false
+        note: |
+          Jeśli faktura prowizyjna podlega obowiązkowi KSeF (data wystawienia >= „Data KSeF” i brak trybu disaster):
+          System uruchamia procedurę „Wysyłka danych faktury KSeF do XFX”.
+          System wywołuje webserwis XFX, przekazując odpowiednie dane faktury do rejestracji.
+  - name:  Aktualizacja raportu dobowego o dane KSeF
+    phase: Faza druga
+    tags: [manualUI]
+    acceptance_criteria:
+      - description: Raport dobowy prezentuje dane z FakturaKSeF
+        status: false
+        note: |
+          Raport dobowy pobiera i prezentuje dane dotyczące faktur KSeF z tabeli FakturaKSeF
+      - description: Prezentacja statusu KSeF (fkt_KSeF)
+        status: false
+        note: |
+          Każda faktura w raporcie dobowym posiada informację o statusie KSeF zgodnie ze znacznikiem fkt_KSeF (faktura wysłana, faktura zarejestrowana, faktura w trybie awarii).

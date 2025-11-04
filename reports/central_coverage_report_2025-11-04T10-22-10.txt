@@ -1,0 +1,118 @@
+Feature Risk & RBT Report
+
+RBT - Severity & Risk dla funkcji:
+Feature | Tags | Severity | Risk
+Two Factor Auth | - | 5 | 3.72
+Notifications | - | 4 | 3.17
+Billing | - | - | -
+Help Center | - | - | -
+Login | - | - | -
+Registration | - | - | -
+Password Reset | - | - | -
+Profile Edit | - | - | -
+Admin Panel | - | - | -
+Login | - | - | -
+Registration | - | - | -
+Password Reset | - | - | -
+Profile Edit | - | - | -
+Admin Panel | - | - | -
+
+Lista wszystkich features i acceptance criteria:
+- Two Factor Auth (S:5, R:3.72)
+  Tagi: -
+  Acceptance Criteria:
+    User can enable 2FA | Tagi: manualUI, automateAPI | Severity: 4 | Complexity: 3
+    User receives 2FA code | Tagi: manualUI | Severity: 3 | Complexity: 2
+    API returns error for invalid code | Tagi: automateAPI | Severity: 2 | Complexity: 1
+    User can disable 2FA | Tagi: manualUI | Severity: 2 | Complexity: 2
+    User sees 2FA setup wizard | Tagi: manualUI | Severity: 5 | Complexity: 5
+    User can change 2FA method | Tagi: manualUI | Severity: 4 | Complexity: 4
+- Notifications (S:4, R:3.17)
+  Tagi: -
+  Acceptance Criteria:
+    User sees notification bell | Tagi: manualUI | Severity: 2 | Complexity: 1
+    Notification list updates in real time | Tagi: automateUI | Severity: 3 | Complexity: 3
+    User can mark notification as read | Tagi: manualUI, automateUI | Severity: 2 | Complexity: 2
+    Notification disappears after reading | Tagi: manualUI | Severity: 1 | Complexity: 1
+    User can set notification preferences | Tagi: manualUI | Severity: 5 | Complexity: 5
+    Notification sound can be customized | Tagi: manualUI | Severity: 4 | Complexity: 4
+- Billing (S:-, R:-)
+  Tagi: -
+  Acceptance Criteria:
+    API returns invoice list | Tagi: automateAPI | Severity: - | Complexity: -
+    API returns error for invalid invoice | Tagi: automateAPI | Severity: - | Complexity: -
+    API allows invoice download | Tagi: automateAPI | Severity: - | Complexity: -
+- Help Center (S:-, R:-)
+  Tagi: -
+  Acceptance Criteria:
+    User can search help articles | Tagi: manualUI | Severity: - | Complexity: -
+    User can contact support | Tagi: manualUI | Severity: - | Complexity: -
+    Help article opens in new tab | Tagi: manualUI | Severity: - | Complexity: -
+- Login (S:-, R:-)
+  Tagi: -
+  Acceptance Criteria:
+    User can log in with valid credentials | Tagi: automateUI, manualUI | Severity: - | Complexity: -
+    Error message for invalid credentials | Tagi: automateUI, manualUI | Severity: - | Complexity: -
+    Login button disabled for empty fields | Tagi: manualUI | Severity: - | Complexity: -
+- Registration (S:-, R:-)
+  Tagi: -
+  Acceptance Criteria:
+    User can register with valid data | Tagi: automateUI, automateAPI | Severity: - | Complexity: -
+    Error for duplicate email | Tagi: automateUI, automateAPI | Severity: - | Complexity: -
+    Email confirmation sent | Tagi: manualUI | Severity: - | Complexity: -
+    Password strength indicator | Tagi: manualUI | Severity: - | Complexity: -
+    API returns 201 for valid registration | Tagi: automateAPI | Severity: - | Complexity: -
+- Password Reset (S:-, R:-)
+  Tagi: -
+  Acceptance Criteria:
+    User can request password reset | Tagi: manualUI, automateAPI | Severity: - | Complexity: -
+    User receives reset email | Tagi: manualUI | Severity: - | Complexity: -
+    User can set new password | Tagi: automateAPI | Severity: - | Complexity: -
+    API returns error for invalid token | Tagi: automateAPI | Severity: - | Complexity: -
+- Profile Edit (S:-, R:-)
+  Tagi: -
+  Acceptance Criteria:
+    User can change avatar | Tagi: manualUI | Severity: - | Complexity: -
+    User can update email | Tagi: manualUI | Severity: - | Complexity: -
+    Email field validation | Tagi: manualUI | Severity: - | Complexity: -
+- Admin Panel (S:-, R:-)
+  Tagi: -
+  Acceptance Criteria:
+    Admin can view user list | Tagi: automateUI | Severity: - | Complexity: -
+    API returns user data | Tagi: automateAPI | Severity: - | Complexity: -
+    Admin can delete user | Tagi: automateUI | Severity: - | Complexity: -
+    API returns error for invalid user | Tagi: automateAPI | Severity: - | Complexity: -
+- Login (S:-, R:-)
+  Tagi: -
+  Acceptance Criteria:
+    User can log in with valid credentials | Tagi: automateUI, manualUI | Severity: - | Complexity: -
+    Error message for invalid credentials | Tagi: automateUI, manualUI | Severity: - | Complexity: -
+    Login button disabled for empty fields | Tagi: manualUI | Severity: - | Complexity: -
+- Registration (S:-, R:-)
+  Tagi: -
+  Acceptance Criteria:
+    User can register with valid data | Tagi: automateUI, automateAPI | Severity: - | Complexity: -
+    Error for duplicate email | Tagi: automateUI, automateAPI | Severity: - | Complexity: -
+    Email confirmation sent | Tagi: manualUI | Severity: - | Complexity: -
+    Password strength indicator | Tagi: manualUI | Severity: - | Complexity: -
+    API returns 201 for valid registration | Tagi: automateAPI | Severity: - | Complexity: -
+- Password Reset (S:-, R:-)
+  Tagi: -
+  Acceptance Criteria:
+    User can request password reset | Tagi: manualUI, automateAPI | Severity: - | Complexity: -
+    User receives reset email | Tagi: manualUI | Severity: - | Complexity: -
+    User can set new password | Tagi: automateAPI | Severity: - | Complexity: -
+    API returns error for invalid token | Tagi: automateAPI | Severity: - | Complexity: -
+- Profile Edit (S:-, R:-)
+  Tagi: -
+  Acceptance Criteria:
+    User can change avatar | Tagi: manualUI | Severity: - | Complexity: -
+    User can update email | Tagi: manualUI | Severity: - | Complexity: -
+    Email field validation | Tagi: manualUI | Severity: - | Complexity: -
+- Admin Panel (S:-, R:-)
+  Tagi: -
+  Acceptance Criteria:
+    Admin can view user list | Tagi: automateUI | Severity: - | Complexity: -
+    API returns user data | Tagi: automateAPI | Severity: - | Complexity: -
+    Admin can delete user | Tagi: automateUI | Severity: - | Complexity: -
+    API returns error for invalid user | Tagi: automateAPI | Severity: - | Complexity: -
